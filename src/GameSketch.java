@@ -5,6 +5,8 @@ import java.util.Random;
 
 public  class GameSketch extends PApplet {
     int cant = 8;
+
+    int t=1;
     Obstaculos o = new Obstaculos(cant);
     int  width = 600;
     float xr;
@@ -27,6 +29,7 @@ public  class GameSketch extends PApplet {
     public void setup() {
         frameRate(60);
         b1= new bus(width/4+width/2,height,40,80);
+        b1.vX=1;
         b2= new bus(width/2-width/4,height,40,80);
         bg= loadImage("background2.jpg");
         imageMode(CORNER);
@@ -83,6 +86,7 @@ public  class GameSketch extends PApplet {
     @Override
     public void draw() {
         background(0); // reset del fondo
+
         //orden igual a capa
         System.out.println(frameRate);
         c1.move();
@@ -128,9 +132,28 @@ public  class GameSketch extends PApplet {
         g.move();
         g.loop();
 
+        //ia_try
+        if ( comp(b1,a) || comp(b1,b) || comp(b1,c) || comp(b1,d) || comp(b1,e) || comp(b1,f) || comp(b1,g)) {
 
+            if(b1.x-b1.ancho/2 > width-width/4+ b1.ancho && b1.x-b1.ancho/2 < width-width/4- b1.ancho ){
+                t=1;
+            }else{
+                if (b1.x > width-width/4){
+                    t=-1;
+                }
+                if(b1.x-b1.ancho < width-width/4){
+                    t=1;
+                }
+            }
+            b1.vX=4*t;
+        }
 
-
+        if (b1.x>=width){
+            b1.vX=-4;
+        }
+        if(b1.x<= width/2+b1.ancho){
+            b1.vX=4;
+        }
 
 
         if(b1.x<width/2+b1.ancho){
@@ -253,19 +276,13 @@ public  class GameSketch extends PApplet {
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
+    public boolean comp(bus b,obstaculo o){
+        if (o.ox+20 >= b.x-b.ancho && o.ox+20 <= b.x+b.ancho/2 && o.oy> b.BAr()-500){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     public void run() {
