@@ -100,6 +100,7 @@ public  class GameSketch extends PApplet {
 
 
         b1.display();
+        IAmove(b1);
         b1.move();
         b2.display();
         b2.move();
@@ -132,28 +133,6 @@ public  class GameSketch extends PApplet {
         g.move();
         g.loop();
 
-        //ia_try
-        if ( comp(b1,a) || comp(b1,b) || comp(b1,c) || comp(b1,d) || comp(b1,e) || comp(b1,f) || comp(b1,g)) {
-
-            if(b1.x-b1.ancho/2 > width-width/4+ b1.ancho && b1.x-b1.ancho/2 < width-width/4- b1.ancho ){
-                t=1;
-            }else{
-                if (b1.x > width-width/4){
-                    t=-1;
-                }
-                if(b1.x-b1.ancho < width-width/4){
-                    t=1;
-                }
-            }
-            b1.vX=4*t;
-        }
-
-        if (b1.x>=width){
-            b1.vX=-4;
-        }
-        if(b1.x<= width/2+b1.ancho){
-            b1.vX=4;
-        }
 
 
         if(b1.x<width/2+b1.ancho){
@@ -243,6 +222,32 @@ public  class GameSketch extends PApplet {
         }
     }
 
+    public void IAmove(bus bu){
+        if ( comp(bu,a) || comp(bu,b) || comp(bu,c) || comp(bu,d) || comp(bu,e) || comp(bu,f) || comp(bu,g)) {
+
+            if(bu.x-bu.ancho/2 > width-width/4+ bu.ancho && bu.x-bu.ancho/2 < width-width/4- bu.ancho ){
+                t=1;
+            }else{
+                if (bu.x-bu.ancho/2 > width-width/4){
+                    t=-1;
+                }
+                if(bu.x-bu.ancho/2 < width-width/4){
+                    t=1;
+                }
+                if(bu.x-bu.ancho/2 == width-width/4){
+                    t=0;
+                }
+            }
+            bu.vX=4*t;
+        }
+
+        if (bu.x>=width){
+            bu.vX=-4;
+        }
+        if(bu.x<= width/2+b1.ancho){
+            b1.vX=4;
+        }
+    }
     //Clase del tipo Obstaculo
     class obstaculo {
         float ox, oy;
@@ -278,11 +283,21 @@ public  class GameSketch extends PApplet {
 
     }
     public boolean comp(bus b,obstaculo o){
+        boolean c = o.ox>width/2;
+        boolean a = b.x-b.ancho/2 > o.ox+17 && b.x-b.ancho/2 < o.ox+23 && o.oy> b.BAr()-80 && c;
+
+        if( a || c && o.oy+40>=b.BAr() ){
+            return true;
+        }else{
+            return false;
+        }
+        /*
         if (o.ox+20 >= b.x-b.ancho && o.ox+20 <= b.x+b.ancho/2 && o.oy> b.BAr()-500){
             return true;
         }else {
             return false;
         }
+        */
     }
 
     public void run() {
