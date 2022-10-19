@@ -10,7 +10,7 @@ public  class GameSketch extends PApplet {
 
 
 
-    //VARIABLES DE CARACTER GLOBAR
+    //VARIABLES DE CARACTER GLOBAl
     float obsposx[]= new float[6];
     float obsposy[]= new float[6];
     int cant = 8;
@@ -24,13 +24,14 @@ public  class GameSketch extends PApplet {
     calle c1;
     calle c2;
 
+
     @Override
     public void settings() {
         size(width, 600);
     }
 
 
-   //Metodo generador de posicion inicial en x de los obstaculos
+
 
     @Override
     public void setup() {
@@ -51,7 +52,7 @@ public  class GameSketch extends PApplet {
 
 
 
-        //Objetos del tipo obstaculo
+
 
     }
 
@@ -90,8 +91,8 @@ public  class GameSketch extends PApplet {
     }
     @Override
     public void draw() {
-        background(0); // reset del fondo
-        //orden igual a capa
+        background(0);
+
 
         //Guardando las posiciones de los obstaculos en Arrays.
         obsposx[0]=a.ox;
@@ -109,7 +110,7 @@ public  class GameSketch extends PApplet {
         obsposx[4]=e.ox;
         obsposy[4]=d.oy;
 
-
+        int x =23330;
         c1.move();
         c1.display();
         c1.loop();
@@ -123,6 +124,10 @@ public  class GameSketch extends PApplet {
         b1.display();
         b1.move();
         b1.colisiones(40,obsposx,obsposy,6);
+
+
+
+
         b2.display();
         b2.move();
         b2.colisiones(40,obsposx,obsposy,6);
@@ -134,7 +139,7 @@ public  class GameSketch extends PApplet {
         b.display();
         b.move();
         b.loop();
-
+        /**
         c.display();
         c.move();
         c.loop();
@@ -146,7 +151,7 @@ public  class GameSketch extends PApplet {
         e.display();
         e.move();
         e.loop();
-
+        **/
 
 
         if(b1.x<width/2+b1.ancho){
