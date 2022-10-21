@@ -29,23 +29,7 @@ public  class GameSketch extends PApplet {
 
     //METODOS DE CARACTER GLOBAL
 
-    public void disminuir(){
-        int  x = u;
-        if( b1.colisiones(40,obsposx,obsposy,6)==1){
-            while(x>0){
-                vcalle1 = 5;
-                x =x-1;
-                System.out.println(x);
-            }
-        }
-        if( b1.colisiones(40,obsposx,obsposy,6)==1){
-            int h = u;
-            while(h>0){
-                vcalle2 = 5;
-                h =h-1;
-            }
-        }
-    }
+
 
 
     @Override
@@ -115,8 +99,6 @@ public  class GameSketch extends PApplet {
     public void draw() {
         background(0);
 
-
-        thread("disminuir");
         obsposx[0]=a.ox;
         obsposy[0]=a.oy;
 
@@ -152,27 +134,28 @@ public  class GameSketch extends PApplet {
         b2.move();
         b2.colisiones(40,obsposx,obsposy,6);
 
+        a.loop();
         a.display();
         a.move();
-        a.loop();
-        a.choque();
 
 
+
+        b.loop();
         b.display();
         b.move();
-        b.loop();
 
+        c.loop();
         c.display();
         c.move();
-        c.loop();
 
+        d.loop();
         d.display();
         d.move();
-        d.loop();
 
+        e.loop();
         e.display();
         e.move();
-        e.loop();
+
 
 
 
@@ -254,17 +237,21 @@ public  class GameSketch extends PApplet {
 
         }
 
-        public int colisiones(int tamañoobjeto,float []xarray,float []yarray,int tamañoarreglo) {
+        public int[] colisiones(int tamañoobjeto,float []xarray,float []yarray,int tamañoarreglo) {
+            int colisiondata[] = new int[2];
            for(int i=0;i<tamañoarreglo;i++) {
               float obsx = xarray[i];
               float obsy = yarray[i];
-            float d = dist(this.x, this.y, obsx, obsy);
+              float d = dist(this.x, this.y, obsx, obsy);
             if ((x>=obsx && x<=obsx+tamañoobjeto) && (y<=obsy+tamañoobjeto && y>=obsy)) {
-                System.out.println("choque");
-                return 1;
+                colisiondata[0]=1;
+                colisiondata[1]=i;
+                return colisiondata;
             }
         }
-           return 0;
+           colisiondata[0]=-1;
+           colisiondata[1]=-1;
+           return  colisiondata;
         }
 
         //mover bus
@@ -305,13 +292,12 @@ public  class GameSketch extends PApplet {
             rect(ox,oy,40,40);
         }
 
-        public  void choque(){
-            if( b1.colisiones(40,obsposx,obsposy,6)==1 || b2.colisiones(40,obsposx,obsposy,6)==1){
-             this.oy = this.oy + 40;
-            }
-        }
+
 
         public void loop(){
+            if( b1.colisiones(40,obsposx,obsposy,6)[0]==1 || b2.colisiones(40,obsposx,obsposy,6)[0]==1){
+                System.out.println("choque");
+            }
             if(oy>700){
                 oy = h;
                 ArrayList <Float> obsta2 = o.generador();
