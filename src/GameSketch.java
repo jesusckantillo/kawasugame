@@ -11,10 +11,9 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-     int u = 2000;
     int vcalle1 = 15;int vcalle2 =15;
-    float obsposx[]= new float[6];
-    float obsposy[]= new float[6];
+    float[] obsposx = new float[6];
+    float[] obsposy = new float[6];
     int cant = 8;
     Obstaculos o = new Obstaculos(cant);
     int  width = 600;
@@ -28,7 +27,6 @@ public  class GameSketch extends PApplet {
 
 
     //METODOS DE CARACTER GLOBAL
-
 
 
 
@@ -116,6 +114,8 @@ public  class GameSketch extends PApplet {
 
 
 
+
+
         c1.move(vcalle1);
         c1.display();
         c1.loop();
@@ -128,21 +128,26 @@ public  class GameSketch extends PApplet {
 
         b1.display();
         b1.move();
-        b1.colisiones(40,obsposx,obsposy,6);
-
-        b2.display();
-        b2.move();
-        b2.colisiones(40,obsposx,obsposy,6);
-
-        a.loop();
-        a.display();
-        a.move();
 
 
+       b1.colisiones(40,obsposx,obsposy,6);
+       System.out.println(b1.colisiones(40,obsposx,obsposy,6));
+       //int hb1 = b1.colisiones(40,obsposx,obsposy,6);
+
+        //b2.display();
+        //b2.move();
+
+       // b2.colisiones(40,obsposx,obsposy,6);
+       // int hb2 =b2.colisiones(40,obsposx,obsposy,6);
 
         b.loop();
         b.display();
         b.move();
+
+        /**
+         a.loop();
+         a.display();
+         a.move();
 
         c.loop();
         c.display();
@@ -155,8 +160,7 @@ public  class GameSketch extends PApplet {
         e.loop();
         e.display();
         e.move();
-
-
+        */
 
 
         if(b1.x<width/2+b1.ancho){
@@ -200,9 +204,6 @@ public  class GameSketch extends PApplet {
             }
         }
 
-        public void speedup(){
-
-        }
 
     }
 
@@ -237,21 +238,18 @@ public  class GameSketch extends PApplet {
 
         }
 
-        public int[] colisiones(int tamañoobjeto,float []xarray,float []yarray,int tamañoarreglo) {
-            int colisiondata[] = new int[2];
-           for(int i=0;i<tamañoarreglo;i++) {
+        public int colisiones(int tamañoobjeto,float []xarray,float []yarray,int tamañoarreglo) {
+            int h=0;
+            for(int i=0;i<tamañoarreglo;i++) {
               float obsx = xarray[i];
               float obsy = yarray[i];
-              float d = dist(this.x, this.y, obsx, obsy);
             if ((x>=obsx && x<=obsx+tamañoobjeto) && (y<=obsy+tamañoobjeto && y>=obsy)) {
-                colisiondata[0]=1;
-                colisiondata[1]=i;
-                return colisiondata;
+                System.out.println("choque");
+                h =i;
+                break;
             }
         }
-           colisiondata[0]=-1;
-           colisiondata[1]=-1;
-           return  colisiondata;
+           return h;
         }
 
         //mover bus
@@ -283,6 +281,9 @@ public  class GameSketch extends PApplet {
             voy = Voy;
         }
 
+
+
+
         public void move(){
             oy = oy + voy;
         }
@@ -292,12 +293,12 @@ public  class GameSketch extends PApplet {
             rect(ox,oy,40,40);
         }
 
+        public void choque(){
+            oy = 620;
+        }
 
 
         public void loop(){
-            if( b1.colisiones(40,obsposx,obsposy,6)[0]==1 || b2.colisiones(40,obsposx,obsposy,6)[0]==1){
-                System.out.println("choque");
-            }
             if(oy>700){
                 oy = h;
                 ArrayList <Float> obsta2 = o.generador();
