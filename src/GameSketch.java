@@ -5,6 +5,10 @@ import java.util.Random;
 
 public  class GameSketch extends PApplet {
     int cant = 8;
+    int time = 0;
+
+    float acc1 = 0.5f;
+    float acc2 = 0.5f;
 
     int t=1;
     Obstaculos o = new Obstaculos(cant);
@@ -16,6 +20,8 @@ public  class GameSketch extends PApplet {
     PImage bg;
     calle c1;
     calle c2;
+
+    goal meta;
 
     @Override
     public void settings() {
@@ -34,15 +40,16 @@ public  class GameSketch extends PApplet {
         bg= loadImage("background2.jpg");
         imageMode(CORNER);
         bg.resize((int) (width/2+b1.ancho), height*5);
-        c1= new calle(-20,-1500,10);
-        c2= new calle(width/2-20,-1500,10);
-        a = new obstaculo(-2000,15,0);
-        b = new obstaculo(-3000,15,1);
-        c = new obstaculo(-2800,15,3);
-        d = new obstaculo(-3700,15,4);
-        e = new obstaculo(-2600,15,5);
-        f= new obstaculo(-2400,15,6);
-        g = new obstaculo(-3300,15,7);
+        c1= new calle(-20,-1500,1);
+        c2= new calle(width/2-20,-1500,1);
+        meta= new goal(width/2,-1000,b1,c2);
+        a = new obstaculo(-1000,15,0);
+        b = new obstaculo(-1500,15,1);
+        c = new obstaculo(-2000,15,3);
+        d = new obstaculo(-2500,15,4);
+        e = new obstaculo(-3000,15,5);
+        f= new obstaculo(-4000,15,6);
+        g = new obstaculo(-3500,15,7);
 
 
         //Objetos del tipo obstaculo
@@ -87,6 +94,7 @@ public  class GameSketch extends PApplet {
     public void draw() {
         background(0); // reset del fondo
 
+
         //orden igual a capa
         System.out.println(frameRate);
         c1.move();
@@ -100,10 +108,16 @@ public  class GameSketch extends PApplet {
 
 
         b1.display();
-        IAmove(b1);
+        if(acc2 != 0) {
+            IAmove(b1);
+        }
         b1.move();
         b2.display();
         b2.move();
+
+        meta.display();
+        meta.move();
+        meta.finish();
 
         a.display();
         a.move();
@@ -134,6 +148,11 @@ public  class GameSketch extends PApplet {
         g.loop();
 
 
+        if( (c1.v<10 || c2.v<10) && millis()-time>1000){
+            if(c1.v<10) c1.v+= acc1;
+            if(c2.v<10) c2.v+= acc2;
+            time=millis()-time;
+        }
 
         if(b1.x<width/2+b1.ancho){
             b1.x=width/2+b1.ancho;
@@ -170,7 +189,7 @@ public  class GameSketch extends PApplet {
         }
         //Funcion que redibuja la imagen
         public void loop(){
-            if(y==0.0){
+            if(y>-10){
                 y=-1500;
 
             }
@@ -274,19 +293,50 @@ public  class GameSketch extends PApplet {
 
         public void loop(){
             if(oy>600){
-                System.out.println("PING");
-                oy = h;
+                oy = -3500;
                 ArrayList <Float> obsta2 = o.generador();
                 ox = obsta2.get((int) (Math.random() * cant) + 1);
             }
         }
 
     }
+
+    class goal{
+        float x;
+        float y;
+        bus b;
+        calle c;
+
+        goal(float ox, float oy, bus ob,calle oc){
+            this.x  = ox;
+            this.y  = oy;
+            this.b  = ob;
+            this.c  = oc;
+        }
+
+        public void  display(){
+            fill(255);
+            rect(x,y,width/2,40);
+        }
+
+        public void move(){
+            this.y += this.c.v;
+        }
+
+        public void finish() {
+            if(this.y > this.b.BAr()+20){
+                this.b.vX=0;
+                this.c.v=0;
+                acc2=0;
+            }
+        }
+
+    }
     public boolean comp(bus b,obstaculo o){
         boolean c = o.ox>width/2;
-        boolean a = b.x-b.ancho/2 > o.ox+17 && b.x-b.ancho/2 < o.ox+23 && o.oy> b.BAr()-80 && c;
+        boolean a = b.x-b.ancho/2 > o.ox+17 && b.x-b.ancho/2 < o.ox+23 && o.oy+40>b.BAr()-80;
 
-        if( a || c && o.oy+40>=b.BAr() ){
+        if( a || (c && o.oy+40>=b.BAr()) ){
             return true;
         }else{
             return false;
@@ -299,6 +349,8 @@ public  class GameSketch extends PApplet {
         }
         */
     }
+
+
 
     public void run() {
         String[] processingArgs = {this.getClass().getName()};
