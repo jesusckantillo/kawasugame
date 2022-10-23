@@ -86,8 +86,8 @@ public  class GameSketch extends PApplet {
         bg.resize((int) (width/2+b1.ancho), height*5);
         c2= new calle(-20,-1500,vcalle2);
         c1= new calle(width/2-20,-1500,vcalle1);
-        meta1 = new goal(width/2+10,-1500,b1,c1);
-        meta2 = new goal(10,-1000,b2,c2);
+        meta1 = new goal(width/2+10,-200000,b1,c1);
+        meta2 = new goal(10,-200000,b2,c2);
         a = new obstaculo(-2000,15,0,55,55);
         b = new obstaculo(-3000,15,1,55,55);
         c = new obstaculo(-1500,15,2,55,55);
@@ -190,10 +190,6 @@ public  class GameSketch extends PApplet {
         b.move();
         b.loop();
 
-         a.loop();
-         a.display();
-         a.move();
-
          c.loop();
          c.display();
          c.move();
@@ -262,7 +258,6 @@ public  class GameSketch extends PApplet {
         float vX; // velocidad X
         float ancho;
         float largo;
-        int c; // color RGB
         int num;
 
         //posicion de los bordes
@@ -282,8 +277,6 @@ public  class GameSketch extends PApplet {
             largo = l;
             num=n;
             vX = 0;
-            c = 255;
-
         }
 
         public int colisiones(int anchoOb, int largoOb, float []xarray,float []yarray,int tamañoarreglo) {
@@ -307,7 +300,7 @@ public  class GameSketch extends PApplet {
 
         //mostrar-generar bus
         public void display() {
-            fill(c);
+            fill(255);
             rect(x-ancho,y-largo,ancho,largo);
 
         }
@@ -343,7 +336,6 @@ public  class GameSketch extends PApplet {
     class obstaculo {
         float ox, oy;
         float voy;
-        float h;
 
         float alturaobs, anchoobs;
         ArrayList <Float> obsta = o.generador();
@@ -351,7 +343,6 @@ public  class GameSketch extends PApplet {
         //Constructor
         obstaculo( float o_y, float Voy,int pos, int alto, int ancho) {
             oy = o_y;
-            h = oy; //Guardo su posicion inicla en y para que vuelva a ella al momento de llegar a y =0.0
             ox = obsta.get(pos);
             voy = Voy;
             alturaobs = alto;
@@ -359,7 +350,7 @@ public  class GameSketch extends PApplet {
         }
 
         public void move(){
-            oy = oy + voy;
+            oy += voy;
         }
 
         public void  display(){
@@ -426,10 +417,10 @@ public  class GameSketch extends PApplet {
     }
 
     public boolean comp(bus b,obstaculo o){
-        boolean c = o.ox>width/2;
-        boolean a = b.x-b.ancho/2 > o.ox+17 && b.x-b.ancho/2 < o.ox+23 && o.oy+40>b.BAr()-80;
+        boolean z = o.ox>width/2;
+        boolean x = b.x-b.ancho/2 > o.ox+17 && b.x-b.ancho/2 < o.ox+23 && o.oy+40>b.BAr()-80;
 
-        if( a || (c && o.oy+40>=b.BAr()) ){
+        if( x || (z && o.oy+40>=b.BAr()) ){
             return true;
         }else{
             return false;
