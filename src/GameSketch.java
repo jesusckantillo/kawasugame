@@ -13,8 +13,6 @@ public  class GameSketch extends PApplet {
     float[] obsposx = new float[5];
     float[] obsposy = new float[5];
 
-    float acc1 = 0.5f;
-    float acc2 = 0.5f;
 
     int t=1;
 
@@ -166,7 +164,7 @@ public  class GameSketch extends PApplet {
 
 
         b1.display();
-        if(acc2 != 0) {
+        if(IAinU) {
             IAmove(b1);
         }
         b1.move();
@@ -211,12 +209,6 @@ public  class GameSketch extends PApplet {
         b1.colisiones(55,55,obsposx,obsposy,5);
         b2.colisiones(55,55,obsposx,obsposy,5);
 
-
-        if( (c1.v<10 || c2.v<10) && millis()-time>1000){
-            if(c1.v<10) c1.v+= acc1;
-            if(c2.v<10) c2.v+= acc2;
-            time=millis()-time;
-        }
 
         if(b1.x<width/2+b1.ancho){
             b1.x=width/2+b1.ancho;
@@ -422,8 +414,6 @@ public  class GameSketch extends PApplet {
                 c.voy=0;
                 d.voy=0;
                 e.voy=0;
-                acc1=0;
-                acc2=0;
                 if(bus.num==1){
                     System.out.println("Gano el bus 1");
                 }else {
