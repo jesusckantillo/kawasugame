@@ -2,7 +2,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import java.util.*;
 import java.util.Random;
-
+// aaron
 public  class GameSketch extends PApplet {
     int cant = 8;
     int time = 0;
@@ -341,13 +341,6 @@ public  class GameSketch extends PApplet {
         }else{
             return false;
         }
-        /*
-        if (o.ox+20 >= b.x-b.ancho && o.ox+20 <= b.x+b.ancho/2 && o.oy> b.BAr()-500){
-            return true;
-        }else {
-            return false;
-        }
-        */
     }
 
 
