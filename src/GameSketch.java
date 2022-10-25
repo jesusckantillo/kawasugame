@@ -9,13 +9,18 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int vcalle1 = 15;int vcalle2 =15;
+    float TiempoReduccionSODIS = 5000;
+    float TiempoReduccionSOBUSA = 10000;
+    float TiempoReduccionPUERTO = 2500;
+
+
+
     float[] obsposx = new float[5];
     float[] obsposy = new float[5];
     int cant = 8;
-    Obstaculos o = new Obstaculos(cant);
-    DetectorDeColisiones colisionador = new DetectorDeColisiones();
+
     int  width = 600;
+
     obstaculo a,b,c,d,e,f,g;
     bus b1;
     bus b2;
@@ -24,10 +29,33 @@ public  class GameSketch extends PApplet {
     calle c2;
 
 
+    Obstaculos o = new Obstaculos(cant);
+    DetectorDeColisiones colisionador = new DetectorDeColisiones();
+
+
+
     //METODOS DE CARACTER GLOBAL
-     void devuelveObs(bus bus){
-            int h = bus.colisiones(60,60,obsposx,obsposy,6);
+
+    //-- Metodo para cada opcion de colision.
+
+        public void SobusaC1(){
+            float u = TiempoReduccionSOBUSA;
+            float  v = c1.v;
+            while(u>0){
+                c1.v = 10;
+                u=u-1;
+                System.out.println(u);
+            }
+            c1.v = v;
+
+        }
+
+
+
+     public int devuelveObs(bus bus){
+            int h = bus.colisiones(60,60,obsposx,obsposy,5);
             if (h!=-1){
+
                 switch (h){
                     case 1:
                         b.oy=620;
@@ -35,42 +63,27 @@ public  class GameSketch extends PApplet {
                     case 0:
                         a.oy=620;
                         break;
-
                     case 2:
                         c.oy = 620;
                         break;
-
                     case 3:
                         d.oy = 620;
                         break;
-
                     case 4:
                         e.oy = 620;
                         break;
                     default:
                         break;
                 }
-
+                return 1;
             }
-
-
-
-
-
-
+        return  0;
      }
-
-
-
-
 
     @Override
     public void settings() {
         size(width, 600);
     }
-
-
-
     @Override
     public void setup() {
         frameRate(50);
@@ -80,8 +93,8 @@ public  class GameSketch extends PApplet {
         imageMode(CORNER);
         rectMode(CORNER);
         bg.resize((int) (width/2+b1.ancho), height*5);
-        c1= new calle(-20,-1500,vcalle1);
-        c2= new calle(width/2-20,-1500,vcalle2);
+        c1= new calle(-20,-1500,20);
+        c2= new calle(width/2-20,-1500,20);
         a = new obstaculo(-2000,15,0,55,55);
         b = new obstaculo(-3000,15,1,55,55);
         c = new obstaculo(-2800,15,2,55,55);
@@ -128,10 +141,14 @@ public  class GameSketch extends PApplet {
             b2.vX = 0;
         }
     }
-    @Override
-    public void draw() {
-        background(0);
 
+
+
+    @Override
+
+    public void draw() {
+
+        background(0);
         obsposx[0]=a.ox;
         obsposy[0]=a.oy;
 
@@ -149,18 +166,18 @@ public  class GameSketch extends PApplet {
 
 
 
-        c1.move(vcalle1);
-        c1.display();
-        c1.loop();
+        c1.move();
+       c1.display();
+       c1.loop();
 
 
         c2.display();
-        c2.move(vcalle2);
+        c2.move();
         c2.loop();
 
 
         b1.display();
-        b1.move();
+     b1.move();
 
 
 
@@ -191,6 +208,13 @@ public  class GameSketch extends PApplet {
 
         b1.colisiones(55,55,obsposx,obsposy,5);
         b2.colisiones(55,55,obsposx,obsposy,5);
+        devuelveObs(b1);
+        if(devuelveObs(b1)==1){
+
+      }
+       if(devuelveObs(b2)==1) {
+           //thread("SobusaC1");
+       }
 
 
         if(b1.x<width/2+b1.ancho){
@@ -213,13 +237,13 @@ public  class GameSketch extends PApplet {
         float y;
         float v;
 
-        calle(float tx, float ty, int tv){
+        calle(float tx, float ty, float tv){
             x=tx;
             y=ty;
             v=tv;
         }
 
-        public void move(int v) {
+        public void move() {
             y+=v;
         }
 
@@ -228,7 +252,7 @@ public  class GameSketch extends PApplet {
         }
         //Funcion que redibuja la imagen
         public void loop(){
-            if(y==0.0){
+            if(y>=0.0){
                 y=-1500;
 
             }
@@ -270,12 +294,14 @@ public  class GameSketch extends PApplet {
 
         public int colisiones(int anchoOb, int largoOb, float []xarray,float []yarray,int tamañoarreglo) {
             int h=-1;
+            int u;
             for(int i=0;i<tamañoarreglo;i++) {
                 float obsx = (xarray[i]);
                 float obsy =(yarray[i]);
                 boolean AlertaColision = colisionador.rectRect(obsx,obsy,anchoOb,largoOb,x,y,ancho, largo);
                 if (AlertaColision) {
                     System.out.println(i);
+                    
                     return i;
                 }
             }
@@ -323,7 +349,7 @@ public  class GameSketch extends PApplet {
         }
 
         public void  display(){
-            fill(102, 102, 255);
+            fill(0, 255, 208);
             rect(ox,oy,alturaobs,anchoobs);
         }
 
