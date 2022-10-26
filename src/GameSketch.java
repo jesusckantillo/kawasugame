@@ -1,13 +1,8 @@
 import processing.core.PApplet;
 import processing.core.PImage;
-import java.util.*;
-import java.util.Random;
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 public  class GameSketch extends PApplet {
-
-
-
     //VARIABLES DE CARACTER GLOBAl
     float[] obsposx = new float[5];
     float[] obsposy = new float[5];
@@ -29,10 +24,6 @@ public  class GameSketch extends PApplet {
 
 
     //METODOS DE CARACTER GLOBAL
-
-    //-- Metodo para cada opcion de colision.
-
-
 
 
 
@@ -60,7 +51,7 @@ public  class GameSketch extends PApplet {
         e = new obstaculo(-2600,15,4,55,55);
     }
     public int devuelveObs(bus bus){
-        int h = bus.colisiones(60,60,obsposx,obsposy,5);
+        int h = bus.colisiones(60,60,obsposx,obsposy,5,b1);
         if (h!=-1){
 
             switch (h){
@@ -186,8 +177,8 @@ public  class GameSketch extends PApplet {
         e.display();
         e.move();
 
-        b1.colisiones(55,55,obsposx,obsposy,5);
-        b2.colisiones(55,55,obsposx,obsposy,5);
+        b1.colisiones(55,55,obsposx,obsposy,5,b1);
+        b2.colisiones(55,55,obsposx,obsposy,5,b2);
         devuelveObs(b1);
         if(devuelveObs(b1)==1){
 
@@ -273,14 +264,18 @@ public  class GameSketch extends PApplet {
 
         }
 
-        public int colisiones(int anchoOb, int largoOb, float []xarray,float []yarray,int tamañoarreglo) {
+        public int colisiones(int anchoOb, int largoOb, float []xarray,float []yarray,int tamañoarreglo,bus bus) {
             int h=-1;
             int u;
             for(int i=0;i<tamañoarreglo;i++) {
                 float obsx = (xarray[i]);
                 float obsy =(yarray[i]);
-                boolean AlertaColision = colisionador.rectRect(obsx,obsy,anchoOb,largoOb,x,y,ancho, largo);
-                if (AlertaColision) {
+                int obsxint = (int)(obsx);
+                int obsyint = (int)(obsy);
+                Rectangle r1 = new Rectangle((int)(x),(int)(y),(int)(ancho),(int)(largo));
+                Rectangle r2 = new Rectangle((int)(obsx),(int)(obsy),anchoOb,largoOb);
+                if (r1.intersects(r2)) {
+                    
                     return i;
                 }
             }
