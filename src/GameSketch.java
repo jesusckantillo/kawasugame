@@ -9,12 +9,6 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    float TiempoReduccionSODIS = 5000;
-    float TiempoReduccionSOBUSA = 10000;
-    float TiempoReduccionPUERTO = 2500;
-
-
-
     float[] obsposx = new float[5];
     float[] obsposy = new float[5];
     int cant = 8;
@@ -24,7 +18,7 @@ public  class GameSketch extends PApplet {
     obstaculo a,b,c,d,e,f,g;
     bus b1;
     bus b2;
-    PImage bg;
+    PImage bg,puerto;
     calle c1;
     calle c2;
 
@@ -38,47 +32,10 @@ public  class GameSketch extends PApplet {
 
     //-- Metodo para cada opcion de colision.
 
-        public void SobusaC1(){
-            float u = TiempoReduccionSOBUSA;
-            float  v = c1.v;
-            while(u>0){
-                c1.v = 10;
-                u=u-1;
-                System.out.println(u);
-            }
-            c1.v = v;
-
-        }
 
 
 
-     public int devuelveObs(bus bus){
-            int h = bus.colisiones(60,60,obsposx,obsposy,5);
-            if (h!=-1){
 
-                switch (h){
-                    case 1:
-                        b.oy=620;
-                        break;
-                    case 0:
-                        a.oy=620;
-                        break;
-                    case 2:
-                        c.oy = 620;
-                        break;
-                    case 3:
-                        d.oy = 620;
-                        break;
-                    case 4:
-                        e.oy = 620;
-                        break;
-                    default:
-                        break;
-                }
-                return 1;
-            }
-        return  0;
-     }
 
     @Override
     public void settings() {
@@ -86,10 +43,11 @@ public  class GameSketch extends PApplet {
     }
     @Override
     public void setup() {
-        frameRate(50);
-        b1= new bus(width/4+width/2,height,40,80);
-        b2= new bus(width/2-width/4,height,40,80);
         bg= loadImage("background2.jpg");
+        puerto = loadImage("puerto.png");
+        frameRate(50);
+        b1= new bus(width/4+width/2,height,40,80,puerto);
+        b2= new bus(width/2-width/4,height,40,80,puerto);
         imageMode(CORNER);
         rectMode(CORNER);
         bg.resize((int) (width/2+b1.ancho), height*5);
@@ -100,13 +58,35 @@ public  class GameSketch extends PApplet {
         c = new obstaculo(-2800,15,2,55,55);
         d = new obstaculo(-3700,15,3,55,55);
         e = new obstaculo(-2600,15,4,55,55);
-
-
-
-
-
-
     }
+    public int devuelveObs(bus bus){
+        int h = bus.colisiones(60,60,obsposx,obsposy,5);
+        if (h!=-1){
+
+            switch (h){
+                case 1:
+                    b.oy=620;
+                    break;
+                case 0:
+                    a.oy=620;
+                    break;
+                case 2:
+                    c.oy = 620;
+                    break;
+                case 3:
+                    d.oy = 620;
+                    break;
+                case 4:
+                    e.oy = 620;
+                    break;
+                default:
+                    break;
+            }
+            return 1;
+        }
+        return  0;
+    }
+
 
     //manejar teclas presionadas
     @Override
@@ -167,8 +147,8 @@ public  class GameSketch extends PApplet {
 
 
         c1.move();
-       c1.display();
-       c1.loop();
+        c1.display();
+        c1.loop();
 
 
         c2.display();
@@ -177,12 +157,12 @@ public  class GameSketch extends PApplet {
 
 
         b1.display();
-     b1.move();
+        b1.move();
 
 
 
-       b2.display();
-       b2.move();
+        b2.display();
+        b2.move();
 
 
 
@@ -190,31 +170,31 @@ public  class GameSketch extends PApplet {
         b.display();
         b.move();
 
-         a.loop();
-         a.display();
-         a.move();
+        a.loop();
+        a.display();
+        a.move();
 
-         c.loop();
-         c.display();
-         c.move();
+        c.loop();
+        c.display();
+        c.move();
 
-         d.loop();
-         d.display();
-         d.move();
+        d.loop();
+        d.display();
+        d.move();
 
-         e.loop();
-         e.display();
-         e.move();
+        e.loop();
+        e.display();
+        e.move();
 
         b1.colisiones(55,55,obsposx,obsposy,5);
         b2.colisiones(55,55,obsposx,obsposy,5);
         devuelveObs(b1);
         if(devuelveObs(b1)==1){
 
-      }
-       if(devuelveObs(b2)==1) {
-           //thread("SobusaC1");
-       }
+        }
+        if(devuelveObs(b2)==1) {
+            //thread("SobusaC1");
+        }
 
 
         if(b1.x<width/2+b1.ancho){
@@ -264,7 +244,7 @@ public  class GameSketch extends PApplet {
 
     //clase bus
     class bus {
-
+        PImage skin;
         float x; //posicion en x
         float y; // posicion en y
         float vX; // velocidad X
@@ -282,8 +262,9 @@ public  class GameSketch extends PApplet {
         }
 
         //constructor
-        bus(float tx, float ty, float a, float l) {
+        bus(float tx, float ty, float a, float l,PImage tipo) {
             x = tx;
+            skin = tipo;
             y = ty;
             ancho = a;
             largo = l;
@@ -300,8 +281,6 @@ public  class GameSketch extends PApplet {
                 float obsy =(yarray[i]);
                 boolean AlertaColision = colisionador.rectRect(obsx,obsy,anchoOb,largoOb,x,y,ancho, largo);
                 if (AlertaColision) {
-                    System.out.println(i);
-                    
                     return i;
                 }
             }
@@ -373,5 +352,3 @@ public  class GameSketch extends PApplet {
 
 
 }
-
-
