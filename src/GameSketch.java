@@ -4,13 +4,13 @@ import java.awt.*;
 import java.util.ArrayList;
 public  class GameSketch extends PApplet {
     //VARIABLES DE CARACTER GLOBAl
-    float[] obsposx = new float[5];
-    float[] obsposy = new float[5];
     int cant = 8;
-
     int  width = 600;
+    float speedDownDelay = 3000;
+     Boolean calle1c = false;
+     Boolean calle2c = false;
 
-    obstaculo a,b,c,d,e,f,g;
+    obstaculo a,b,c,d,e;
     bus b1;
     bus b2;
     PImage bg,puerto;
@@ -19,11 +19,31 @@ public  class GameSketch extends PApplet {
 
 
     Obstaculos o = new Obstaculos(cant);
-    DetectorDeColisiones colisionador = new DetectorDeColisiones();
+    boolean ejecutar = false;
 
 
 
     //METODOS DE CARACTER GLOBAL
+
+
+
+    public void loop(){
+        float saver = c1.v;
+        int rt = 80;
+        while(rt>0) {
+            c1.v= 5;
+            System.out.println(rt);
+            rt= rt-1;
+            delay(20);
+        }
+        c1.v = saver;
+    }
+
+
+
+
+
+
 
 
 
@@ -37,46 +57,51 @@ public  class GameSketch extends PApplet {
         bg= loadImage("background2.jpg");
         puerto = loadImage("puerto.png");
         frameRate(50);
-        b1= new bus(width/4+width/2,height,40,80,puerto);
-        b2= new bus(width/2-width/4,height,40,80,puerto);
+        b1= new bus(width/4+width/2,height,40,80,puerto,6,false);
+        b2= new bus(width/2-width/4,height,40,80,puerto,6,false);
         imageMode(CORNER);
         rectMode(CORNER);
         bg.resize((int) (width/2+b1.ancho), height*5);
-        c1= new calle(-20,-1500,20);
-        c2= new calle(width/2-20,-1500,20);
-        a = new obstaculo(-2000,15,0,55,55);
-        b = new obstaculo(-3000,15,1,55,55);
-        c = new obstaculo(-2800,15,2,55,55);
-        d = new obstaculo(-3700,15,3,55,55);
-        e = new obstaculo(-2600,15,4,55,55);
+        c1= new calle(-20,-1500,15);
+        c2= new calle(width/2-20,-1500,15);
+        a = new obstaculo(-2000,10,0,55,55);
+        b = new obstaculo(-3000,10,1,55,55);
+        c = new obstaculo(-2800,10,2,55,55);
+        d = new obstaculo(-3700,10,3,55,55);
+        e = new obstaculo(-2600,10,4,55,55);
     }
-    public int devuelveObs(bus bus){
-        int h = bus.colisiones(60,60,obsposx,obsposy,5,b1);
-        if (h!=-1){
 
-            switch (h){
-                case 1:
-                    b.oy=620;
-                    break;
-                case 0:
-                    a.oy=620;
-                    break;
-                case 2:
-                    c.oy = 620;
-                    break;
-                case 3:
-                    d.oy = 620;
-                    break;
-                case 4:
-                    e.oy = 620;
-                    break;
-                default:
-                    break;
-            }
-            return 1;
+
+    public void speedDownC1(){
+        float saver = c1.v;
+        int rt = 80;
+        while(rt>0) {
+            c1.v= 2;
+            System.out.println(rt);
+            rt = rt-1;
+            delay(20);
         }
-        return  0;
+        c1.v = saver;
     }
+
+    public  void speedDownC2(){
+        float saver = c2.v;
+        int rt = 80;
+        while(rt>0) {
+            c2.v= 2;
+            System.out.println(rt);
+            rt = rt-1;
+            delay(20);
+        }
+        c2.v = saver;
+    }
+
+
+
+
+
+
+
 
 
     //manejar teclas presionadas
@@ -118,30 +143,19 @@ public  class GameSketch extends PApplet {
     @Override
 
     public void draw() {
-
         background(0);
-        obsposx[0]=a.ox;
-        obsposy[0]=a.oy;
 
-        obsposx[1]=b.ox;
-        obsposy[1]=b.oy;
+        //Limpio colisiones de ambos buses
+        b1.colision = false;
+        b2.colision = false;
 
-        obsposx[2]=c.ox;
-        obsposy[2]=c.oy;
 
-        obsposx[3]=d.ox;
-        obsposy[3]=d.oy;
-
-        obsposx[4]=e.ox;
-        obsposy[4]=e.oy;
 
 
 
         c1.move();
         c1.display();
         c1.loop();
-
-
         c2.display();
         c2.move();
         c2.loop();
@@ -160,32 +174,41 @@ public  class GameSketch extends PApplet {
         b.loop();
         b.display();
         b.move();
-
+        b.choque(b1,2);
+        b.choque(b2,1);
         a.loop();
         a.display();
         a.move();
+        a.choque(b1,2);
+        a.choque(b2,1);
 
         c.loop();
         c.display();
         c.move();
+        c.choque(b1,2);
+        c.choque(b2,1);
 
         d.loop();
         d.display();
         d.move();
-
+        d.choque(b1,2);
+        d.choque(b2,1);
         e.loop();
         e.display();
         e.move();
-
-        b1.colisiones(55,55,obsposx,obsposy,5,b1);
-        b2.colisiones(55,55,obsposx,obsposy,5,b2);
-        devuelveObs(b1);
-        if(devuelveObs(b1)==1){
-
+        e.choque(b1,2);
+        e.choque(b2,1);
+        if(b1.colision){
+            b1.vidas = b1.vidas-1;
+            thread("speedDownC2");
         }
-        if(devuelveObs(b2)==1) {
-            //thread("SobusaC1");
+        if(b2.colision){
+            b2.vidas = b2.vidas-1;
+            thread("speedDownC1");
         }
+
+
+
 
 
         if(b1.x<width/2+b1.ancho){
@@ -200,6 +223,12 @@ public  class GameSketch extends PApplet {
         if(b2.x>width/2-b2.ancho/2){
             b2.x=width/2-b2.ancho/2;
         }
+
+
+
+
+
+
     }
 
     //clase calle
@@ -221,6 +250,7 @@ public  class GameSketch extends PApplet {
         public void display(){
             image(bg,x,y);
         }
+
         //Funcion que redibuja la imagen
         public void loop(){
             if(y>=0.0){
@@ -235,7 +265,9 @@ public  class GameSketch extends PApplet {
 
     //clase bus
     class bus {
+        boolean colision;
         PImage skin;
+        int vidas;
         float x; //posicion en x
         float y; // posicion en y
         float vX; // velocidad X
@@ -253,7 +285,9 @@ public  class GameSketch extends PApplet {
         }
 
         //constructor
-        bus(float tx, float ty, float a, float l,PImage tipo) {
+        bus(float tx, float ty, float a, float l,PImage tipo, int Vidas, Boolean col) {
+            colision = col;
+            vidas = Vidas;
             x = tx;
             skin = tipo;
             y = ty;
@@ -264,23 +298,8 @@ public  class GameSketch extends PApplet {
 
         }
 
-        public int colisiones(int anchoOb, int largoOb, float []xarray,float []yarray,int tamañoarreglo,bus bus) {
-            int h=-1;
-            int u;
-            for(int i=0;i<tamañoarreglo;i++) {
-                float obsx = (xarray[i]);
-                float obsy =(yarray[i]);
-                int obsxint = (int)(obsx);
-                int obsyint = (int)(obsy);
-                Rectangle r1 = new Rectangle((int)(x),(int)(y),(int)(ancho),(int)(largo));
-                Rectangle r2 = new Rectangle((int)(obsx),(int)(obsy),anchoOb,largoOb);
-                if (r1.intersects(r2)) {
-                    
-                    return i;
-                }
-            }
-            return h;
-        }
+        public  void velocity(){}
+
 
         //mover bus
         public void move() {
@@ -303,10 +322,10 @@ public  class GameSketch extends PApplet {
         float h;
 
         float alturaobs, anchoobs;
-        ArrayList <Float> obsta = o.generador();
+        ArrayList<Float> obsta = o.generador();
 
         //Constructor
-        obstaculo( float o_y, float Voy,int pos, int alto, int ancho) {
+        obstaculo(float o_y, float Voy, int pos, int alto, int ancho) {
             oy = o_y;
             h = oy; //Guardo su posicion inicla en y para que vuelva a ella al momento de llegar a y =0.0
             ox = obsta.get(pos);
@@ -316,20 +335,30 @@ public  class GameSketch extends PApplet {
         }
 
 
+        public int  choque(bus bus, int ncalle){ //Pide como parametro el bus y el numero de la calle en la que esta ese bus
+            Rectangle rec1 = new Rectangle((int)(ox),(int)(oy),(int)(anchoobs),(int)(alturaobs));
+            Rectangle rec2 = new Rectangle((int)(bus.x),(int)(bus.y),(int)(bus.ancho),(int)(bus.largo));
+            if(rec2.intersects(rec1)){
+                bus.colision = true;
+                System.out.println("Choque");
+                this.oy = 690;
+                bus.colision = true;
+                delay(60);
 
+            }
+            return 0;
+        }
 
-        public void move(){
+        public void move() {
             oy = oy + voy;
         }
 
-        public void  display(){
+        public void display() {
             fill(0, 255, 208);
-            rect(ox,oy,alturaobs,anchoobs);
+            rect(ox, oy, alturaobs, anchoobs);
         }
 
-        public void choque(){
-            oy = 620;
-        }
+
 
 
         public void loop(){
