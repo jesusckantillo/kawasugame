@@ -4,11 +4,11 @@ import java.awt.*;
 import java.util.ArrayList;
 public  class GameSketch extends PApplet {
     //VARIABLES DE CARACTER GLOBAl
-    int cant = 9;
+    int cant = 10;
     int  width = 600;
 
     int w=1;
-    obstaculo a,b,c,d,e,f,g,h,i;
+    obstaculo a,b,c,d,e,f,g,h,i,j,k;
     bus b1;
     bus b2;
     PImage bg,puerto;
@@ -22,6 +22,54 @@ public  class GameSketch extends PApplet {
 
 
     //METODOS DE CARACTER GLOBAL
+
+    public void jumpB1(){
+        float ancho = 40;
+        float largo = 80;
+        int salto = 10;
+        int caida = 10;
+        while(salto>0){
+            b1.ancho+=1;
+            b1.largo+=1;
+            salto = salto-1;
+            delay(100);
+        }
+        while(caida>0){
+            b1.ancho = b1.ancho-1;
+            b1.largo = b1.largo -1;
+            caida = caida -1;
+            delay(100);
+
+        }
+        b1.ancho = ancho;
+        b1.largo = largo;
+    }
+
+
+    public void jumpB2(){
+        float ancho2 = 40;
+        float largo2 = 80;
+        int salto2 = 10;
+        int caida2 = 10;
+        while(salto2>0){
+            b2.ancho+=1;
+            b2.largo+=1;
+            salto2 = salto2-1;
+            delay(100);
+        }
+        while(caida2>0){
+            b1.ancho = b1.ancho-1;
+            b1.largo = b1.largo -1;
+            caida2 = caida2 -1;
+            delay(100);
+
+        }
+
+        b2.ancho = ancho2;
+        b2.largo = largo2;
+    }
+
+
 
 
     public void speedDownC1(){
@@ -97,6 +145,7 @@ public  class GameSketch extends PApplet {
         c2= new calle(width/2-20,-1500,15);
         m1 = new goal(width/2+10,-200000,b1,c1);
         m2 = new goal(10,-2000000,b2,c2);
+
         a = new obstaculo(-2000,15,0,55,55,1);
         b = new obstaculo(-3000,15,1,55,55,1);
         c = new obstaculo(-2800,15,2,55,55,1);
@@ -104,8 +153,10 @@ public  class GameSketch extends PApplet {
         e = new obstaculo(-2600,15,4,55,55,1);
         f= new obstaculo(-3600,15,5,55,55,2);
         g= new obstaculo(-2900,15,6,55,55,2);
-        h= new obstaculo(-2800,10,7,55,55,2);
-       // i= new obstaculo(-2500,10,8,55,55,2);
+        h= new obstaculo(-2800,15,7,55,55,2);
+        i= new obstaculo(-2500,15,8,55,55,2);
+
+        i= new obstaculo(-2500,15,9,55,55,3);;
     }
 
 
@@ -155,6 +206,10 @@ public  class GameSketch extends PApplet {
 
         b2.colObs = false;
         b2.colVel = false;
+
+        b1.colPol = false;
+        b2.colPol = false;
+
 
         c1.move();
         c1.display();
@@ -224,6 +279,12 @@ public  class GameSketch extends PApplet {
         h.choque(b1);
         h.choque(b2);
 
+        i.loop();
+        i.display();
+        i.move();
+        i.choque(b1);
+        i.choque(b2);
+
 
         m1.display();
         m1.move();
@@ -260,6 +321,14 @@ public  class GameSketch extends PApplet {
         if(b2.colVel){
             thread("speedUPC1");
         }
+
+        if(b1.colPol){
+            thread("jumpB1");
+        }
+        if(b2.colPol){
+            thread("jumpB2");
+        }
+
 
 
 
@@ -433,6 +502,11 @@ public  class GameSketch extends PApplet {
                 fill(90, 3, 252);
                 rect(ox, oy, alturaobs, anchoobs);
             }
+            if(this.tipo==3){
+                fill(66, 245, 102);
+                rect(ox, oy, alturaobs, anchoobs);
+            }
+
         }
         public void loop(){
             if(oy>700){
