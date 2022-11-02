@@ -7,7 +7,7 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =0; //1 MENU  2 JUEGO
+    int GameState =1; //0 MENU  1 JUEGO
 
     int cant = 10;
     int  width = 600;
@@ -154,6 +154,9 @@ public  class GameSketch extends PApplet {
         Classroom = createFont("fonts/ClassroomPersonalUse-7Bv34.ttf",30);
         frameRate(45);
         b1= new bus(width/4+width/2,height,40,80,puerto,6,false,false,false,1,false);
+        if(IAinU){
+            b1.vX=1;
+        }
         b2= new bus(width/2-width/4,height,40,80,puerto,6,false,false,false,2,false);
         imageMode(CORNER);
         rectMode(CORNER);
@@ -238,6 +241,7 @@ public  class GameSketch extends PApplet {
         c2.loop();
 
         b1.display();
+        IAmove(b1);
         b1.move();
 
 
@@ -417,7 +421,7 @@ public  class GameSketch extends PApplet {
 
         //Funcion que redibuja la imagen
         public void loop(){
-            if(y>=0.0){
+            if(y>=-10.0){
                 y=-1500;
 
             }
@@ -611,6 +615,67 @@ public  class GameSketch extends PApplet {
             }
         }
 
+    }
+
+    public void IAmove(bus bu){
+
+        if(comp(bu,a) || comp(bu,b) || comp(bu,c) || comp(bu,d)){
+            t=-t;
+        }
+
+        if( bu.x >= width || bu.x - bu.ancho <= width/2 ){
+            t=-t;
+        }
+
+        bu.vX= 6 *t;
+        /*
+        if ( comp(bu,a) || comp(bu,b) || comp(bu,c) || comp(bu,d) || comp(bu,e)) {
+
+            if(bu.x-bu.ancho/2 > width-width/4+ bu.ancho && bu.x-bu.ancho/2 < width-width/4- bu.ancho ){
+                t=1;
+            }else{
+                if (bu.x-bu.ancho/2 > width-width/4){
+                    t=-1;
+                }
+                if(bu.x-bu.ancho/2 < width-width/4){
+                    t=1;
+                }
+            }
+            bu.vX=4*t;
+        }
+
+        if (bu.x>=width){
+            bu.vX=-4;
+        }
+        if(bu.x<= width/2+b1.ancho){
+            b1.vX=4;
+        }
+         */
+
+
+    }
+
+    public boolean comp(bus b,obstaculo o){
+
+        /*
+        boolean z = o.ox>width/2;
+        boolean x = b.x-b.ancho/2 > o.ox+17 && b.x-b.ancho/2 < o.ox+23 && o.oy+40>b.BAr()-80;
+
+        if( x || (z && o.oy+40>=b.BAr()) ){
+            return true;
+        }else{
+            return false;
+        }
+         */
+
+        boolean y = o.ox < b.x +20 && o.ox > b.x-b.ancho -20;
+        boolean z = o.ox>width/2;
+        boolean x = b.x-b.ancho/2 > o.ox+22.5 && b.x-b.ancho/2 < o.ox+32.5 && o.oy+55> width - 120;
+        if( (x && y) || (z && o.oy+55>b.BAr()+20 && y ) ){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public void run() {
