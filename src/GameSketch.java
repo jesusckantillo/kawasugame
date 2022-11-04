@@ -9,6 +9,7 @@ public  class GameSketch extends PApplet {
     //VARIABLES DE CARACTER GLOBAl
     int GameState =1; //0 MENU  1 JUEGO
 
+    int timing=0;
     int cant = 10;
     int  width = 600;
     boolean IAinU = true;
@@ -182,10 +183,10 @@ public  class GameSketch extends PApplet {
     //manejar teclas presionadas
     @Override
     public void keyPressed() {
-        if (keyCode == LEFT) {
+        if (keyCode == LEFT && !IAinU) {
             b1.vX = -5;
         }
-        if (keyCode == RIGHT) {
+        if (keyCode == RIGHT && !IAinU) {
             b1.vX = 5;
         }
         if (key == 'a') {
@@ -241,7 +242,12 @@ public  class GameSketch extends PApplet {
         c2.loop();
 
         b1.display();
-        IAmove(b1);
+        if(IAinU && !b1.isFlying) {
+            IAmove(b1);
+        }
+        if(b1.isFlying){
+            b1.vX=0;
+        }
         b1.move();
 
 
@@ -564,7 +570,7 @@ public  class GameSketch extends PApplet {
         }
         public void loop(){
             if(oy>700){
-                oy = h;
+                oy = -3700;
                 ArrayList <Float> obsta2 = o.generador();
                 ox = obsta2.get((int) (Math.random() * cant) + 1);
             }
@@ -618,64 +624,31 @@ public  class GameSketch extends PApplet {
     }
 
     public void IAmove(bus bu){
-
-        if(comp(bu,a) || comp(bu,b) || comp(bu,c) || comp(bu,d)){
+        boolean x = comp(bu,a) || comp(bu,b) || comp(bu,c) || comp(bu,d);
+        boolean y = bu.x >= width || bu.x - bu.ancho <= width/2;
+        if(x && Math.random()>0.5 ) {
             t=-t;
         }
-
-        if( bu.x >= width || bu.x - bu.ancho <= width/2 ){
-            t=-t;
-        }
-
-        bu.vX= 6 *t;
-        /*
-        if ( comp(bu,a) || comp(bu,b) || comp(bu,c) || comp(bu,d) || comp(bu,e)) {
-
-            if(bu.x-bu.ancho/2 > width-width/4+ bu.ancho && bu.x-bu.ancho/2 < width-width/4- bu.ancho ){
-                t=1;
-            }else{
-                if (bu.x-bu.ancho/2 > width-width/4){
-                    t=-1;
-                }
-                if(bu.x-bu.ancho/2 < width-width/4){
-                    t=1;
-                }
+            if(y) {
+                t = -t;
             }
-            bu.vX=4*t;
-        }
-
-        if (bu.x>=width){
-            bu.vX=-4;
-        }
-        if(bu.x<= width/2+b1.ancho){
-            b1.vX=4;
-        }
-         */
+        bu.vX= 6 *t;
 
 
     }
 
     public boolean comp(bus b,obstaculo o){
-
-        /*
-        boolean z = o.ox>width/2;
-        boolean x = b.x-b.ancho/2 > o.ox+17 && b.x-b.ancho/2 < o.ox+23 && o.oy+40>b.BAr()-80;
-
-        if( x || (z && o.oy+40>=b.BAr()) ){
+        Rectangle rec1 = new Rectangle((int)(o.ox-10),(int)(o.oy),(int)(o.anchoobs + 15 ),(int)(o.alturaobs+ 100));
+        Rectangle rec2 = new Rectangle((int)(b.x-b.ancho-5),(int)(b.y-b.largo),(int)(b.ancho+10),(int)(b.largo));
+        if( (o.oy>450 && o.oy<500 && rec1.intersects(rec2) && o.ox>width/2) || (o.oy>550 && rec1.intersects(rec2) ) ){
+            return false;
+        }
+        if(rec1.intersects(rec2) && o.ox>width/2){
             return true;
         }else{
             return false;
         }
-         */
 
-        boolean y = o.ox < b.x +20 && o.ox > b.x-b.ancho -20;
-        boolean z = o.ox>width/2;
-        boolean x = b.x-b.ancho/2 > o.ox+22.5 && b.x-b.ancho/2 < o.ox+32.5 && o.oy+55> width - 120;
-        if( (x && y) || (z && o.oy+55>b.BAr()+20 && y ) ){
-            return true;
-        }else{
-            return false;
-        }
     }
 
     public void run() {
