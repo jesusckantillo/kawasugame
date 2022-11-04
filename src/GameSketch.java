@@ -8,8 +8,6 @@ public  class GameSketch extends PApplet {
 
     //VARIABLES DE CARACTER GLOBAl
     int GameState =1; //0 MENU  1 JUEGO
-
-    int timing=0;
     int cant = 10;
     int  width = 600;
     boolean IAinU = true;
@@ -241,6 +239,7 @@ public  class GameSketch extends PApplet {
         c2.move();
         c2.loop();
 
+        // actualizar esto
         b1.display();
         if(IAinU && !b1.isFlying) {
             IAmove(b1);
@@ -249,7 +248,7 @@ public  class GameSketch extends PApplet {
             b1.vX=0;
         }
         b1.move();
-
+        // ^^^^^^
 
         b2.display();
         b2.move();
@@ -624,6 +623,7 @@ public  class GameSketch extends PApplet {
     }
 
     public void IAmove(bus bu){
+        // reemplazar toda esta funcion
         boolean x = comp(bu,a) || comp(bu,b) || comp(bu,c) || comp(bu,d);
         boolean y = bu.x >= width || bu.x - bu.ancho <= width/2;
         if(x && Math.random()>0.5 ) {
@@ -638,6 +638,7 @@ public  class GameSketch extends PApplet {
     }
 
     public boolean comp(bus b,obstaculo o){
+        // reemplazar toda esta fucion
         Rectangle rec1 = new Rectangle((int)(o.ox-10),(int)(o.oy),(int)(o.anchoobs + 15 ),(int)(o.alturaobs+ 100));
         Rectangle rec2 = new Rectangle((int)(b.x-b.ancho-5),(int)(b.y-b.largo),(int)(b.ancho+10),(int)(b.largo));
         if( (o.oy>450 && o.oy<500 && rec1.intersects(rec2) && o.ox>width/2) || (o.oy>550 && rec1.intersects(rec2) ) ){
