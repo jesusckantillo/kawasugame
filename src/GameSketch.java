@@ -7,7 +7,7 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =1; //0 MENU  1 JUEGO 2 GANADORES
+    int GameState =0; //0 MENU  1 JUEGO 2 GANADORES
     float vObs = 15;
     int cant = 10;
     int winner;
@@ -160,6 +160,7 @@ public  class GameSketch extends PApplet {
     //manejar teclas presionadas
     @Override
     public void keyPressed() {
+
         if (keyCode == LEFT && !IAinU) {
             b1.vX = -5;
         }
@@ -177,6 +178,14 @@ public  class GameSketch extends PApplet {
     // manejar teclas soltadas
     @Override
     public void keyReleased() {
+        if(GameState == 0){
+            GameState = 1 ;
+        }
+        if(GameState == 2){
+            if(keyCode == ENTER) {
+                GameState = 0;
+            }
+        }
         if (keyCode == LEFT) {
             b1.vX = 0;
         }
