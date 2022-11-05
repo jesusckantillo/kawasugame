@@ -7,9 +7,10 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =0; //1 MENU  2 JUEGO
-
+    int GameState =1; //1 MENU  2 JUEGO
+    float vObs = 15;
     int cant = 10;
+    int winner;
     int  width = 600;
     boolean IAinU = true;
     int w=1;
@@ -30,16 +31,6 @@ public  class GameSketch extends PApplet {
 
 
     //METODOS DE CARACTER GLOBAL
-
-
-    public void finishl(){
-        c1.v =0;
-        c2.v =0;
-
-
-
-    }
-
     public void jumpB1(){
         float ancho = 40;
         float largo = 80;
@@ -49,21 +40,19 @@ public  class GameSketch extends PApplet {
             b1.ancho+=1;
             b1.largo+=1;
             salto = salto-1;
-            delay(100);
+            delay(40);
         }
         while(caida>0){
             b1.ancho = b1.ancho-1;
             b1.largo = b1.largo -1;
             caida = caida -1;
-            delay(100);
+            delay(40);
 
         }
         b1.ancho = ancho;
         b1.largo = largo;
         b1.isFlying = false;
     }
-
-
     public void jumpB2(){
         float ancho2 = 40;
         float largo2 = 80;
@@ -73,13 +62,13 @@ public  class GameSketch extends PApplet {
             b2.ancho+=1;
             b2.largo+=1;
             salto2 = salto2-1;
-            delay(100);
+            delay(40);
         }
         while(caida2>0){
             b2.ancho = b2.ancho-1;
             b2.largo = b2.largo -1;
             caida2 = caida2 -1;
-            delay(100);
+            delay(40);
 
         }
 
@@ -87,60 +76,50 @@ public  class GameSketch extends PApplet {
         b2.largo = largo2;
         b1.isFlying = false;
     }
-
-
-
-
     public void speedDownC1(){
         float saversd1 = c1.v;
         int tsc1 = 80;
         while(tsc1>0) {
             c1.v= 2;
-            System.out.println(tsc1);
             tsc1 = tsc1-1;
             delay(19);
         }
         c1.v = saversd1;
     }
-
     public  void speedDownC2(){
         float saverd2 = c2.v;
         int tg = 80;
         while(tg>0){
             c2.v = 2;
-            System.out.println(tg);
             tg = tg -1;
             delay(19);
         }
         c2.v = saverd2;
     }
-
     public void speedUPC1(){
         float saverc1 = c1.v;
         int r = 80;
         while(r>0) {
             c1.v= 20;
-            System.out.println(r);
             r = r-1;
             delay(19);
         }
         c1.v = saverc1;
     }
-
-
     public void speedUPC2(){
         float saverc2 = c2.v;
         int r = 80;
         while(r>0) {
             c2.v= 20;
-            System.out.println(r);
             r = r-1;
             delay(19);
         }
         c2.v = saverc2;
     }
 
-
+    public void finishVidas(){
+        GameState=2;
+    }
     @Override
     public void settings() {
         size(width, 600);
@@ -153,16 +132,15 @@ public  class GameSketch extends PApplet {
         sfont = createFont("fonts/SketchBook-B5pB.ttf",20);
         Classroom = createFont("fonts/ClassroomPersonalUse-7Bv34.ttf",30);
         frameRate(45);
-        b1= new bus(width/4+width/2,height,40,80,puerto,6,false,false,false,1,false);
-        b2= new bus(width/2-width/4,height,40,80,puerto,6,false,false,false,2,false);
+        b1= new bus(width/4+width/2,height,40,80,puerto,3,false,false,false,1,false);
+        b2= new bus(width/2-width/4,height,40,80,puerto,3,false,false,false,2,false);
         imageMode(CORNER);
         rectMode(CORNER);
         bg.resize((int) (width/2+b1.ancho), height*5);
         c1= new calle(-20,-1500,17);
         c2= new calle(width/2-20,-1500,17);
-        m1 = new goal(width/2+10,-20000,b1,c2);
-        m2 = new goal(10,-20000,b2,c1);
-
+        m1 = new goal(width/2+10,-10000,b1,c2);
+        m2 = new goal(10,-10000,b2,c1);
         a = new obstaculo(-2000,15,0,55,55,1);
         b = new obstaculo(-3000,15,1,55,55,1);
         c = new obstaculo(-2800,15,2,55,55,1);
@@ -210,11 +188,6 @@ public  class GameSketch extends PApplet {
         }
     }
 
-
-
-
-
-
     //METODOS DE EJECUCION DEL JUEGO
     void game(){
         background(0);
@@ -237,12 +210,7 @@ public  class GameSketch extends PApplet {
         c2.move();
         c2.loop();
 
-        b1.display();
-        b1.move();
 
-
-        b2.display();
-        b2.move();
 
         b.loop();
         b.display();
@@ -322,6 +290,12 @@ public  class GameSketch extends PApplet {
         m2.finish();
 
 
+        b1.display();
+        b1.move();
+
+
+        b2.display();
+        b2.move();
 
 
          i.loop();
@@ -356,6 +330,20 @@ public  class GameSketch extends PApplet {
             thread("jumpB2");
         }
 
+        if(b1.vidas==0){
+            winner =2;
+            finishVidas();
+        }
+
+        if(b2.vidas==0){
+            winner =1;
+            finishVidas();
+        }
+
+
+
+
+
 
 
         if(b1.x<width/2+b1.ancho){
@@ -372,7 +360,6 @@ public  class GameSketch extends PApplet {
         }
 
     }
-
     void mainmenu(){
         background(fmenu);
         textFont(Classroom);
@@ -381,17 +368,24 @@ public  class GameSketch extends PApplet {
 
 
     }
+    void winnermenu(){
+        background(255);
+    }
 
 
 
 
     @Override
     public void draw() {
+        System.out.println(GameState);
         if(GameState==0){
             mainmenu();
         } else if(GameState==1){
             game();
+        }else if(GameState==2){
+            winnermenu();
         }
+
 
     }
 
@@ -417,7 +411,7 @@ public  class GameSketch extends PApplet {
 
         //Funcion que redibuja la imagen
         public void loop(){
-            if(y>=0.0){
+            if(y>=-10.0){
                 y=-1500;
 
             }
@@ -517,9 +511,11 @@ public  class GameSketch extends PApplet {
                     delay(60);
                 }
                 if(this.tipo==2){
+                    this.oy = 690;
                     bus.colVel = true;
                 }
                 if(this.tipo==3){
+                    this.oy = 690;
                     bus.colPol= true;
                     bus.isFlying = true;
                 }
@@ -533,16 +529,6 @@ public  class GameSketch extends PApplet {
         public void move() {
             oy = oy + voy;
         }
-
-
-
-
-
-
-
-
-
-
         public void display() {
             if(this.tipo==1) {
                 fill(0, 255, 208);
@@ -588,11 +574,12 @@ public  class GameSketch extends PApplet {
             this.y += this.calle.v;
         }
 
+
         public void finish() {
             if(this.y > this.bus.BAr()+20 && w!=0){
                 b1.vX=0;
-                c1.v=0;
                 b2.vX=0;
+                c1.v=0;
                 c2.v=0;
                 a.voy=0;
                 b.voy=0;
@@ -600,8 +587,10 @@ public  class GameSketch extends PApplet {
                 d.voy=0;
                 e.voy=0;
                 f.voy=0;
-                g.oy=0;
-                i.oy=0;
+                g.voy=0;
+                h.voy=0;
+                i.voy=0;
+                GameState =2;
                 if(bus.num==1){
                     System.out.println("Gano el bus 1");
                 }else {
@@ -610,6 +599,15 @@ public  class GameSketch extends PApplet {
                 w=0;
             }
         }
+
+
+
+
+
+
+
+
+
 
     }
 
