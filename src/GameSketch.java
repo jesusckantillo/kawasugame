@@ -7,7 +7,7 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =1; //1 MENU  2 JUEGO
+    int GameState =1; //0 MENU  1 JUEGO 2 GANADORES
     float vObs = 15;
     int cant = 10;
     int winner;
@@ -132,8 +132,11 @@ public  class GameSketch extends PApplet {
         sfont = createFont("fonts/SketchBook-B5pB.ttf",20);
         Classroom = createFont("fonts/ClassroomPersonalUse-7Bv34.ttf",30);
         frameRate(45);
-        b1= new bus(width/4+width/2,height,40,80,puerto,3,false,false,false,1,false);
-        b2= new bus(width/2-width/4,height,40,80,puerto,3,false,false,false,2,false);
+        b1= new bus(width/4+width/2,height,40,80,puerto,6,false,false,false,1,false);
+        if(IAinU){
+            b1.vX=1;
+        }
+        b2= new bus(width/2-width/4,height,40,80,puerto,6,false,false,false,2,false);
         imageMode(CORNER);
         rectMode(CORNER);
         bg.resize((int) (width/2+b1.ancho), height*5);
@@ -157,10 +160,10 @@ public  class GameSketch extends PApplet {
     //manejar teclas presionadas
     @Override
     public void keyPressed() {
-        if (keyCode == LEFT) {
+        if (keyCode == LEFT && !IAinU) {
             b1.vX = -5;
         }
-        if (keyCode == RIGHT) {
+        if (keyCode == RIGHT && !IAinU) {
             b1.vX = 5;
         }
         if (key == 'a') {
@@ -291,6 +294,12 @@ public  class GameSketch extends PApplet {
 
 
         b1.display();
+        if(IAinU && !b1.isFlying) {
+            IAmove(b1);
+        }
+        if(b1.isFlying && Math.random()>0.4){
+            b1.vX=0;
+        }
         b1.move();
 
 
@@ -546,7 +555,7 @@ public  class GameSketch extends PApplet {
         }
         public void loop(){
             if(oy>700){
-                oy = h;
+                oy = -3700;
                 ArrayList <Float> obsta2 = o.generador();
                 ox = obsta2.get((int) (Math.random() * cant) + 1);
             }
@@ -600,14 +609,35 @@ public  class GameSketch extends PApplet {
             }
         }
 
+    }
+
+    public void IAmove(bus bu){
+        // reemplazar toda esta funcion
+        boolean x = comp(bu,a) || comp(bu,b) || comp(bu,c) || comp(bu,d);
+        boolean y = bu.x >= width || bu.x - bu.ancho <= width/2;
+        if(x && Math.random()>0.5 ) {
+            t=-t;
+        }
+            if(y && Math.random()>0.5 ) {
+                t = -t;
+            }
+        bu.vX= 6 *t;
 
 
+    }
 
-
-
-
-
-
+    public boolean comp(bus b,obstaculo o){
+        // reemplazar toda esta fucion
+        Rectangle rec1 = new Rectangle((int)(o.ox-10),(int)(o.oy),(int)(o.anchoobs + 15 ),(int)(o.alturaobs+ 100));
+        Rectangle rec2 = new Rectangle((int)(b.x-b.ancho-5),(int)(b.y-b.largo),(int)(b.ancho+10),(int)(b.largo));
+        if( (o.oy+55>450 && o.oy+55<520 && rec1.intersects(rec2)) || (o.oy>550 && rec1.intersects(rec2) ) ){
+            return false;
+        }
+        if(rec1.intersects(rec2) && o.ox>width/2){
+            return true;
+        }else{
+            return false;
+        }
 
     }
 
