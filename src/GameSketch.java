@@ -288,7 +288,7 @@ public  class GameSketch extends PApplet {
         if(IAinU) {
             IAmove(b1);
         }
-        if(Math.random()>0.4){
+        if( b1.isSliding && Math.random()>0.8){
             b1.vX=0;
         }
         b1.move();
@@ -602,28 +602,26 @@ public  class GameSketch extends PApplet {
 
     }
 
+    boolean dodge = true;
     public void IAmove(bus bu){
         // reemplazar toda esta funcion
         boolean x = comp(bu,a) || comp(bu,b) || comp(bu,c) || comp(bu,d);
         boolean y = bu.x >= width || bu.x - bu.ancho <= width/2;
-        if(x && Math.random()>0.5 ) {
+        if(x && dodge ) {
             t=-t;
+            dodge =false;
         }
-            if(y && Math.random()>0.5 ) {
+        if(y && Math.random()>0.5 ) {
                 t = -t;
-            }
+        }
         bu.vX= 6 *t;
-
-
+        if(!x){ dodge=true;}
     }
 
     public boolean comp(bus b,obstaculo o){
         // reemplazar toda esta fucion
-        Rectangle rec1 = new Rectangle((int)(o.ox-10),(int)(o.oy),(int)(o.anchoobs + 15 ),(int)(o.alturaobs+ 100));
-        Rectangle rec2 = new Rectangle((int)(b.x-b.ancho-5),(int)(b.y-b.largo),(int)(b.ancho+10),(int)(b.largo));
-        if( (o.oy+55>450 && o.oy+55<520 && rec1.intersects(rec2)) || (o.oy>550 && rec1.intersects(rec2) ) ){
-            return false;
-        }
+        Rectangle rec1 = new Rectangle((int)(o.ox-5),(int)(o.oy),(int)(o.anchoobs + 10 ),(int)(o.alturaobs+ 80));
+        Rectangle rec2 = new Rectangle((int)(b.x-b.ancho),(int)(b.y-b.largo),(int)(b.ancho),(int)(b.largo));
         if(rec1.intersects(rec2) && o.ox>width/2){
             return true;
         }else{
