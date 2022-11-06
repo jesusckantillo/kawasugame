@@ -45,6 +45,7 @@ public  class GameSketch extends PApplet {
             delay(19);
         }
         dirB1=1;
+        b1.isSliding=false;
     }
 
     public void SlidingB2 (){
@@ -55,6 +56,7 @@ public  class GameSketch extends PApplet {
             delay(19);
         }
         dirB2=1;
+        b2.isSliding=false;
     }
 
 
@@ -424,6 +426,8 @@ public  class GameSketch extends PApplet {
         boolean colObs;
         boolean colVel;
         boolean colPol;
+
+        boolean isSliding;
         int num;
         PImage skin;
         int vidas;
@@ -446,6 +450,7 @@ public  class GameSketch extends PApplet {
 
         //constructor
         bus(float tx, float ty, float a, float l,PImage tipo, int Vidas, Boolean col, Boolean colv,Boolean colp, int Num,Boolean fly) {
+            isSliding=false;
             num = Num;
             colPol = colp;
             colVel = colv;
@@ -512,6 +517,7 @@ public  class GameSketch extends PApplet {
                 if(this.tipo==3){
                     this.oy = 690;
                     bus.colPol= true;
+                    bus.isSliding=true;
                 }
 
 
