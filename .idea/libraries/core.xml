@@ -2,6 +2,7 @@
   <library name="core">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/src/core.jar!/" />
+      <root url="file://$USER_HOME$/OneDrive - Universidad del Norte/SEGUNDO SEMESTRE/ALGORITMIA Y PROGRAMACION 2/KAWASU-RESOURCE/libraries/gifAnimation" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

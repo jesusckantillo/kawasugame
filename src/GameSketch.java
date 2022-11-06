@@ -3,79 +3,74 @@ import processing.core.PFont;
 import processing.core.PImage;
 import java.awt.*;
 import java.util.ArrayList;
+import gifAnimation.*;
+import javax.swing.*;
+
 public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =0; //0 MENU  1 JUEGO 2 GANADORES
-    float vObs = 15;
+    int GameState =0; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
     int cant = 10;
+    int busPlayer = -1;
+    Button bSombusa,bChomdis,bPuecto;
+    int dirB1=1;
+    int dirB2=1;
     int winner;
     int  width = 600;
     boolean IAinU = true;
     int w=1;
     int t=1;
+    Gif menuAni;
+    Gif menuSelAni;
     PFont sfont;
     PFont Classroom;
+    PFont retrogaming;
     obstaculo a,b,c,d,e,f,g,h,i,j,k;
     bus b1;
     bus b2;
-    PImage bg,puerto,fmenu;
+    PImage bg,puerto,loading;
+    PImage skinp, skinm;
+    PImage VelBon, PolCos, VelDb;
+    PImage chomdis,sombusa,puecto;
     calle c1;
     calle c2;
     goal m1,m2;
-
-
+    ImageIcon junioricon = new ImageIcon("src\\data\\icons\\junior.png");
     Obstaculos o = new Obstaculos(cant);
 
 
-
     //METODOS DE CARACTER GLOBAL
-    public void jumpB1(){
-        float ancho = 40;
-        float largo = 80;
-        int salto = 10;
-        int caida = 10;
-        while(salto>0){
-            b1.ancho+=1;
-            b1.largo+=1;
-            salto = salto-1;
-            delay(40);
+    public void SlidingB1 (){
+        int tsc1 = 100;
+        while(tsc1>0) {
+            dirB1=-1;
+            tsc1 = tsc1-1;
+            delay(19);
         }
-        while(caida>0){
-            b1.ancho = b1.ancho-1;
-            b1.largo = b1.largo -1;
-            caida = caida -1;
-            delay(40);
-
-        }
-        b1.ancho = ancho;
-        b1.largo = largo;
-        b1.isFlying = false;
+        dirB1=1;
+        b1.isSliding=false;
     }
-    public void jumpB2(){
-        float ancho2 = 40;
-        float largo2 = 80;
-        int salto2 = 10;
-        int caida2 = 10;
-        while(salto2>0){
-            b2.ancho+=1;
-            b2.largo+=1;
-            salto2 = salto2-1;
-            delay(40);
-        }
-        while(caida2>0){
-            b2.ancho = b2.ancho-1;
-            b2.largo = b2.largo -1;
-            caida2 = caida2 -1;
-            delay(40);
 
+    public void SlidingB2 (){
+        int tsc1 = 100;
+        while(tsc1>0) {
+            dirB2=-1;
+            tsc1 = tsc1-1;
+            delay(19);
         }
-
-        b2.ancho = ancho2;
-        b2.largo = largo2;
-        b1.isFlying = false;
+        dirB2=1;
+        b2.isSliding=false;
     }
+
+
+
+
+
+
+
+
+
     public void speedDownC1(){
         float saversd1 = c1.v;
         int tsc1 = 80;
@@ -126,17 +121,50 @@ public  class GameSketch extends PApplet {
     }
     @Override
     public void setup() {
-        bg= loadImage("images/background2.jpg");
-        puerto = loadImage("images/puerto.png");
-        fmenu = loadImage("images/firstmenu.jpg");
-        sfont = createFont("fonts/SketchBook-B5pB.ttf",20);
-        Classroom = createFont("fonts/ClassroomPersonalUse-7Bv34.ttf",30);
-        frameRate(45);
-        b1= new bus(width/4+width/2,height,40,80,puerto,6,false,false,false,1,false);
+        frameRate(60);
+        chomdis = loadImage("images/ingame/buses/chomdis.png");
+        puecto = loadImage("images/ingame/buses/puecto.png");
+        sombusa = loadImage("images/ingame/buses/sombusa.png");
+        chomdis.resize(40,80);
+        puecto.resize(40,80);
+        sombusa.resize(40,80);
+        skinm = chomdis;
+
+
+
+
+
+        b1= new bus(width/4+width/2,height,40,80,skinm,6,false,false,false,1,false);
         if(IAinU){
             b1.vX=1;
         }
-        b2= new bus(width/2-width/4,height,40,80,puerto,6,false,false,false,2,false);
+        b2= new bus(width/2-width/4,height,40,80,skinp,6,false,false,false,2,false);
+        bg= loadImage("images/ingame/background/carretera.png");
+        bg.resize((int) (width/2+b1.ancho), height*5);
+        retrogaming = createFont("fonts/retrogaming.ttf",20);
+        menuAni = new Gif(this, "images/menugif.gif");
+        menuAni.play();
+        menuSelAni = new Gif(this,"images/mensel.gif");
+        menuSelAni.play();
+
+
+
+
+
+        bSombusa = new Button(60,120,300,100,"SOMBUSA",1);
+        bPuecto = new Button(60,240,300,100,"PUECTO LOCOMBIA",2);
+        bChomdis = new Button(60,360,300,100,"CHOMDIS",3);
+
+
+
+
+
+        retrogaming = createFont("fonts/retrogaming.ttf",20);
+
+
+
+
+
         imageMode(CORNER);
         rectMode(CORNER);
         bg.resize((int) (width/2+b1.ancho), height*5);
@@ -153,7 +181,6 @@ public  class GameSketch extends PApplet {
         g= new obstaculo(-2900,15,6,55,55,2);
         h= new obstaculo(-2800,15,7,55,55,2);
         i= new obstaculo(-2500,15,8,55,55,3);
-
     }
 
 
@@ -178,14 +205,15 @@ public  class GameSketch extends PApplet {
     // manejar teclas soltadas
     @Override
     public void keyReleased() {
-        if(GameState == 0){
+        if(GameState == 0 && keyCode==ENTER){
             GameState = 1 ;
         }
-        if(GameState == 2){
-            if(keyCode == ENTER) {
-                GameState = 0;
-            }
+        if(GameState == 0 && keyCode==CONTROL){
+            JOptionPane.showMessageDialog(null, "Menu de referencias: \n - Java Docs:  https://docs.oracle.com/en/java/ \n -Processing Docs: https://processing.org/reference \n - gifAnimation: https://github.com/akiljohnson1/GifAnimation \n " +
+                    "\n -Diseños by Andres Cantillo y Ronald Silva \n  @https://www.instagram.com/ronald_trash/ \n  @axpen_art'" +
+                    "axpen_art  \n Agradecimientos especiales al doctor Daladier Jabba Molinares", "Referencias",JOptionPane.PLAIN_MESSAGE,junioricon);
         }
+
         if (keyCode == LEFT) {
             b1.vX = 0;
         }
@@ -266,30 +294,23 @@ public  class GameSketch extends PApplet {
          h.move();
 
 
+         a.choque(b1);
+         b.choque(b1);
+         c.choque(b1);
+         d.choque(b1);
+         e.choque(b1);
+         f.choque(b1);
+         g.choque(b1);
+         h.choque(b1);
+         a.choque(b2);
+         b.choque(b2);
+         c.choque(b2);
+         d.choque(b2);
+         e.choque(b2);
+         f.choque(b2);
+         g.choque(b2);
+         h.choque(b2);
 
-
-        if(b1.isFlying == false) {
-            a.choque(b1);
-            b.choque(b1);
-            c.choque(b1);
-            d.choque(b1);
-            e.choque(b1);
-            f.choque(b1);
-             g.choque(b1);
-            h.choque(b1);
-        }
-
-        if(b2.isFlying==false) {
-            a.choque(b2);
-            b.choque(b2);
-            c.choque(b2);
-            d.choque(b2);
-            e.choque(b2);
-             f.choque(b2);
-            g.choque(b2);
-            h.choque(b2);
-
-        }
 
 
 
@@ -303,15 +324,13 @@ public  class GameSketch extends PApplet {
 
 
         b1.display();
-        if(IAinU && !b1.isFlying) {
+        if(IAinU) {
             IAmove(b1);
         }
-        if(b1.isFlying && Math.random()>0.4){
-            b1.vX=0;
+        if(b1.isSliding && Math.random()>0.5){
+            b1.vX=-b1.vX;
         }
         b1.move();
-
-
         b2.display();
         b2.move();
 
@@ -342,10 +361,10 @@ public  class GameSketch extends PApplet {
         }
 
         if(b1.colPol){
-            thread("jumpB1");
+            thread("SlidingB1");
         }
         if(b2.colPol){
-            thread("jumpB2");
+            thread("SlidingB2");
         }
 
         if(b1.vidas==0){
@@ -379,35 +398,42 @@ public  class GameSketch extends PApplet {
 
     }
     void mainmenu(){
-        background(fmenu);
-        textFont(Classroom);
-        textAlign(CENTER);
-        text("Presione cualquier\n tecla para continuar",width/2,height/2);
+        background(menuAni);
+        textFont(retrogaming);
+        textAlign(LEFT,BOTTOM);
+        text("CREDITOS: CONTROL",40,40);
 
 
     }
     void winnermenu(){
         background(255);
     }
-
-
+    void selectmenu(){
+        background(menuSelAni);
+        bSombusa.display();
+        bSombusa.clicked(mouseX,mouseY);
+        bChomdis.display();
+        bChomdis.clicked(mouseX,mouseY);
+        bPuecto.display();
+        bPuecto.clicked(mouseX,mouseY);
+        delay(100);
+    }
 
 
     @Override
     public void draw() {
-        System.out.println(GameState);
         if(GameState==0){
             mainmenu();
-        } else if(GameState==1){
+        } else if(GameState==2){
             game();
-        }else if(GameState==2){
-            winnermenu();
+        } else if(GameState==1){
+            selectmenu();
         }
+
 
 
     }
 
-    //clase calle
     class calle{
         float x;
         float y;
@@ -437,14 +463,11 @@ public  class GameSketch extends PApplet {
 
 
     }
-
-
-    //clase bus
     class bus {
         boolean colObs;
         boolean colVel;
         boolean colPol;
-        boolean isFlying;
+        boolean isSliding;
         int num;
         PImage skin;
         int vidas;
@@ -467,7 +490,7 @@ public  class GameSketch extends PApplet {
 
         //constructor
         bus(float tx, float ty, float a, float l,PImage tipo, int Vidas, Boolean col, Boolean colv,Boolean colp, int Num,Boolean fly) {
-            isFlying = fly;
+            isSliding= false;
             num = Num;
             colPol = colp;
             colVel = colv;
@@ -491,13 +514,10 @@ public  class GameSketch extends PApplet {
 
         //mostrar-generar bus
         public void display() {
-            fill(co);
-            rect(x-ancho,y-largo,ancho,largo);
+            image(skin,x-ancho,y-largo);
 
         }
     }
-
-    //Clase del tipo Obstaculo
     class obstaculo {
         int tipo; //1 OBSTACULO, 2 BONOVELOCIDAD 3 POLICIACOSTADO
         float ox, oy;
@@ -535,7 +555,7 @@ public  class GameSketch extends PApplet {
                 if(this.tipo==3){
                     this.oy = 690;
                     bus.colPol= true;
-                    bus.isFlying = true;
+                    bus.isSliding = true;
                 }
 
 
@@ -620,35 +640,106 @@ public  class GameSketch extends PApplet {
 
     }
 
+
+    boolean dodge = true;
     public void IAmove(bus bu){
         // reemplazar toda esta funcion
         boolean x = comp(bu,a) || comp(bu,b) || comp(bu,c) || comp(bu,d);
         boolean y = bu.x >= width || bu.x - bu.ancho <= width/2;
-        if(x && Math.random()>0.5 ) {
+        if(x && dodge ) {
             t=-t;
+            dodge =false;
         }
-            if(y && Math.random()>0.5 ) {
-                t = -t;
-            }
+        if(y && Math.random()>0.5 && dodge ) {
+            t = -t;
+        }
         bu.vX= 6 *t;
-
-
+        if(x==false){ dodge=true;}
     }
+
 
     public boolean comp(bus b,obstaculo o){
         // reemplazar toda esta fucion
-        Rectangle rec1 = new Rectangle((int)(o.ox-10),(int)(o.oy),(int)(o.anchoobs + 15 ),(int)(o.alturaobs+ 100));
-        Rectangle rec2 = new Rectangle((int)(b.x-b.ancho-5),(int)(b.y-b.largo),(int)(b.ancho+10),(int)(b.largo));
-        if( (o.oy+55>450 && o.oy+55<520 && rec1.intersects(rec2)) || (o.oy>550 && rec1.intersects(rec2) ) ){
-            return false;
-        }
-        if(rec1.intersects(rec2) && o.ox>width/2){
+        Rectangle rec1 = new Rectangle((int)(o.ox-20),(int)(o.oy),(int)(o.anchoobs + 25 ),(int)(o.alturaobs+ 200));
+        Rectangle rec2 = new Rectangle((int)(b.x-b.ancho),(int)(b.y-b.largo),(int)(b.ancho),(int)(b.largo));
+        if(rec1.intersects(rec2) && o.ox>=width/2-55){
             return true;
         }else{
             return false;
         }
 
     }
+
+
+
+
+
+
+    class Button{
+        ///INSTANCE VARIABLES
+        float x,y; //position
+        int nBoton;
+        float w,h; //size
+        boolean selected; //is the button selected / on? true/false
+        int selectedColor, defaultColor, currentColor;
+        String label;
+
+        ///CONSTRUCTORS - no return type declared - match Class-name
+        Button(float x, float y, float w, float h, String label, int n ){
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+            this.label = label;
+            this.nBoton= n;
+            selected = false;
+            defaultColor = color( 255,255,255); //slightly darker?
+            currentColor = defaultColor;
+        }
+
+
+        ///METHODS
+        void display(){
+            fill( currentColor);
+            rect( x, y, w, h);
+            fill( 0);//black for text
+            textFont(retrogaming);
+            textAlign(CENTER);
+            textFont(retrogaming);
+            text( label, x + w/2, y + (h/2));
+        }
+
+    void  clicked( int mx, int my){
+            if( mx > x && mx < x + w  && my > y && my < y+h){
+                //mouse has been clicked
+                selected = !selected;  //toggle the value between true and false
+                if( selected){
+                    currentColor = color(232, 235, 68);
+                    if(mousePressed){
+                       if(this.nBoton==1){
+                           b2.skin= sombusa;
+                       }else if(this.nBoton==2){
+                           b2.skin= puecto;
+                        } else if(this.nBoton==3) {
+                           b2.skin= chomdis;
+                       }
+                        GameState =2;
+                    }
+                }
+            }else{
+                currentColor = defaultColor;
+            }
+
+        }
+
+
+
+    }  //end Button class
+
+
+
+
+
 
     public void run() {
         String[] processingArgs = {this.getClass().getName()};
