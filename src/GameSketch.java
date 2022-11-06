@@ -1,5 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PFont;
+import processing.core.PGraphics;
 import processing.core.PImage;
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,6 +11,9 @@ public  class GameSketch extends PApplet {
     int GameState =0; //0 MENU  1 JUEGO 2 GANADORES
     float vObs = 15;
     int cant = 10;
+
+    int dirB1=1;
+    int dirB2=1;
     int winner;
     int  width = 600;
     boolean IAinU = true;
@@ -20,7 +24,8 @@ public  class GameSketch extends PApplet {
     obstaculo a,b,c,d,e,f,g,h,i,j,k;
     bus b1;
     bus b2;
-    PImage bg,puerto,fmenu;
+    PImage bg,puerto,fmenu,skin1,skin2;
+
     calle c1;
     calle c2;
     goal m1,m2;
@@ -31,51 +36,28 @@ public  class GameSketch extends PApplet {
 
 
     //METODOS DE CARACTER GLOBAL
-    public void jumpB1(){
-        float ancho = 40;
-        float largo = 80;
-        int salto = 10;
-        int caida = 10;
-        while(salto>0){
-            b1.ancho+=1;
-            b1.largo+=1;
-            salto = salto-1;
-            delay(40);
-        }
-        while(caida>0){
-            b1.ancho = b1.ancho-1;
-            b1.largo = b1.largo -1;
-            caida = caida -1;
-            delay(40);
 
+    public void SlidingB1 (){
+        int tsc1 = 100;
+        while(tsc1>0) {
+            dirB1=-1;
+            tsc1 = tsc1-1;
+            delay(19);
         }
-        b1.ancho = ancho;
-        b1.largo = largo;
-        b1.isFlying = false;
+        dirB1=1;
     }
-    public void jumpB2(){
-        float ancho2 = 40;
-        float largo2 = 80;
-        int salto2 = 10;
-        int caida2 = 10;
-        while(salto2>0){
-            b2.ancho+=1;
-            b2.largo+=1;
-            salto2 = salto2-1;
-            delay(40);
-        }
-        while(caida2>0){
-            b2.ancho = b2.ancho-1;
-            b2.largo = b2.largo -1;
-            caida2 = caida2 -1;
-            delay(40);
 
+    public void SlidingB2 (){
+        int tsc1 = 100;
+        while(tsc1>0) {
+            dirB2=-1;
+            tsc1 = tsc1-1;
+            delay(19);
         }
-
-        b2.ancho = ancho2;
-        b2.largo = largo2;
-        b1.isFlying = false;
+        dirB2=1;
     }
+
+
     public void speedDownC1(){
         float saversd1 = c1.v;
         int tsc1 = 80;
@@ -127,19 +109,23 @@ public  class GameSketch extends PApplet {
     @Override
     public void setup() {
         bg= loadImage("images/background2.jpg");
+        skin1= loadImage("images/firstmenu.jpg");
+        skin2= loadImage("images/bu.png");
         puerto = loadImage("images/puerto.png");
         fmenu = loadImage("images/firstmenu.jpg");
         sfont = createFont("fonts/SketchBook-B5pB.ttf",20);
         Classroom = createFont("fonts/ClassroomPersonalUse-7Bv34.ttf",30);
         frameRate(45);
-        b1= new bus(width/4+width/2,height,40,80,puerto,6,false,false,false,1,false);
+        b1= new bus(width/4+width/2,height,40,80,skin1,6,false,false,false,1,false);
         if(IAinU){
             b1.vX=1;
         }
-        b2= new bus(width/2-width/4,height,40,80,puerto,6,false,false,false,2,false);
+        b2= new bus(width/2-width/4,height,40,80,skin2,6,false,false,false,2,false);
         imageMode(CORNER);
         rectMode(CORNER);
         bg.resize((int) (width/2+b1.ancho), height*5);
+        skin1.resize(40,80);
+        skin2.resize(40,80);
         c1= new calle(-20,-1500,17);
         c2= new calle(width/2-20,-1500,17);
         m1 = new goal(width/2+10,-10000,b1,c2);
@@ -162,16 +148,16 @@ public  class GameSketch extends PApplet {
     public void keyPressed() {
 
         if (keyCode == LEFT && !IAinU) {
-            b1.vX = -5;
+            b1.vX = -5*dirB1;
         }
         if (keyCode == RIGHT && !IAinU) {
-            b1.vX = 5;
+            b1.vX = 5*dirB1;
         }
         if (key == 'a') {
-            b2.vX = -5;
+            b2.vX = -5*dirB2;
         }
         if (key == 'd') {
-            b2.vX = 5;
+            b2.vX = 5*dirB2;
         }
     }
 
@@ -261,35 +247,29 @@ public  class GameSketch extends PApplet {
         g.display();
         g.move();
 
-         h.loop();
+        h.loop();
         h.display();
-         h.move();
+        h.move();
 
+         //choques bus 1 (derecha)
+        a.choque(b1);
+        b.choque(b1);
+        c.choque(b1);
+        d.choque(b1);
+        e.choque(b1);
+        f.choque(b1);
+        g.choque(b1);
+        h.choque(b1);
 
-
-
-        if(b1.isFlying == false) {
-            a.choque(b1);
-            b.choque(b1);
-            c.choque(b1);
-            d.choque(b1);
-            e.choque(b1);
-            f.choque(b1);
-             g.choque(b1);
-            h.choque(b1);
-        }
-
-        if(b2.isFlying==false) {
-            a.choque(b2);
-            b.choque(b2);
-            c.choque(b2);
-            d.choque(b2);
-            e.choque(b2);
-             f.choque(b2);
-            g.choque(b2);
-            h.choque(b2);
-
-        }
+        //choques bus 2 (izquierda)
+        a.choque(b2);
+        b.choque(b2);
+        c.choque(b2);
+        d.choque(b2);
+        e.choque(b2);
+        f.choque(b2);
+        g.choque(b2);
+        h.choque(b2);
 
 
 
@@ -303,10 +283,10 @@ public  class GameSketch extends PApplet {
 
 
         b1.display();
-        if(IAinU && !b1.isFlying) {
+        if(IAinU) {
             IAmove(b1);
         }
-        if(b1.isFlying && Math.random()>0.4){
+        if(Math.random()>0.4){
             b1.vX=0;
         }
         b1.move();
@@ -342,10 +322,10 @@ public  class GameSketch extends PApplet {
         }
 
         if(b1.colPol){
-            thread("jumpB1");
+            thread("SlidingB1");
         }
         if(b2.colPol){
-            thread("jumpB2");
+            thread("SlidingB2");
         }
 
         if(b1.vidas==0){
@@ -444,7 +424,6 @@ public  class GameSketch extends PApplet {
         boolean colObs;
         boolean colVel;
         boolean colPol;
-        boolean isFlying;
         int num;
         PImage skin;
         int vidas;
@@ -467,7 +446,6 @@ public  class GameSketch extends PApplet {
 
         //constructor
         bus(float tx, float ty, float a, float l,PImage tipo, int Vidas, Boolean col, Boolean colv,Boolean colp, int Num,Boolean fly) {
-            isFlying = fly;
             num = Num;
             colPol = colp;
             colVel = colv;
@@ -491,8 +469,7 @@ public  class GameSketch extends PApplet {
 
         //mostrar-generar bus
         public void display() {
-            fill(co);
-            rect(x-ancho,y-largo,ancho,largo);
+            image(skin,x-ancho,y-largo);
 
         }
     }
@@ -535,7 +512,6 @@ public  class GameSketch extends PApplet {
                 if(this.tipo==3){
                     this.oy = 690;
                     bus.colPol= true;
-                    bus.isFlying = true;
                 }
 
 
