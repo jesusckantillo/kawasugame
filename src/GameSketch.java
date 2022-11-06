@@ -288,8 +288,8 @@ public  class GameSketch extends PApplet {
         if(IAinU) {
             IAmove(b1);
         }
-        if( b1.isSliding && Math.random()>0.8){
-            b1.vX=0;
+        if( b1.isSliding && Math.random()>0.5){
+            b1.vX=-b1.vX;
         }
         b1.move();
 
@@ -611,18 +611,18 @@ public  class GameSketch extends PApplet {
             t=-t;
             dodge =false;
         }
-        if(y && Math.random()>0.5 ) {
+        if(y && Math.random()>0.5 && dodge ) {
                 t = -t;
         }
         bu.vX= 6 *t;
-        if(!x){ dodge=true;}
+        if(x==false){ dodge=true;}
     }
 
     public boolean comp(bus b,obstaculo o){
         // reemplazar toda esta fucion
-        Rectangle rec1 = new Rectangle((int)(o.ox-5),(int)(o.oy),(int)(o.anchoobs + 10 ),(int)(o.alturaobs+ 80));
+        Rectangle rec1 = new Rectangle((int)(o.ox-20),(int)(o.oy),(int)(o.anchoobs + 25 ),(int)(o.alturaobs+ 200));
         Rectangle rec2 = new Rectangle((int)(b.x-b.ancho),(int)(b.y-b.largo),(int)(b.ancho),(int)(b.largo));
-        if(rec1.intersects(rec2) && o.ox>width/2){
+        if(rec1.intersects(rec2) && o.ox>=width/2-55){
             return true;
         }else{
             return false;
