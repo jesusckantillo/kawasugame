@@ -10,7 +10,7 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =1; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
+    int GameState =0; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
     int cant = 10;
     int busPlayer = -1;
     Button bSombusa,bChomdis,bPuecto;
@@ -29,7 +29,7 @@ public  class GameSketch extends PApplet {
     obstaculo a,b,c,d,e,f,g,h,i,j,k;
     bus b1;
     bus b2;
-    PImage bd,bi,alerta;
+    PImage bd,bi,alerta,meta;
     PImage skinp, skinm;
     PImage VelBon, PolCos, VelDb;
     PImage unaVidas, dosVidas, tresVidas,creditos;
@@ -132,6 +132,7 @@ public  class GameSketch extends PApplet {
         PolCos = loadImage("images/ingame/obs/policiaacostado.png");
         VelDb = loadImage("images/ingame/obs/demandadian.png");
         creditos =loadImage("images/creditsmenu.jpg");
+        meta = loadImage("images/ingame/background/meta.png");
         VelBon.resize(65,65);
         PolCos .resize(65,65);
         VelDb.resize(65,65);
@@ -161,10 +162,10 @@ public  class GameSketch extends PApplet {
         losemenu = new Gif(this,"images/losemenu.gif");
         losemenu.play();
 
-        /*
+
         menuAni = new Gif(this, "images/menugif.gif");
         menuAni.play();
-        */
+
         menusel = loadImage("images/mensel.png");
         bSombusa = new Button(60,120,300,100,"SOMBUSA",1);
         bPuecto = new Button(60,240,300,100,"PUECTO LOCOMBIA",2);
@@ -276,7 +277,7 @@ public  class GameSketch extends PApplet {
         b.choque(b1);
         b.choque(b2);
 
-/**
+
        c.loop();
        c.display();
        c.move();
@@ -290,11 +291,6 @@ public  class GameSketch extends PApplet {
         //Inicio de obstaculos de tipo aumento de velocidad
 
 
-        e.loop();
-        e.display();
-        e.move();
-        e.choque(b1);
-        e.choque(b2);
 
         f.loop();
         f.display();
@@ -311,7 +307,6 @@ public  class GameSketch extends PApplet {
 
         //Fin de obstaculo de tipo aumento de velocidad
 
-        **/
         //Inicio de obstaculos de tipo policia acotado
         i.loop();
         i.display();
@@ -324,8 +319,6 @@ public  class GameSketch extends PApplet {
         j.move();
         j.choque(b1);
         j.choque(b2);
-
-
 
 
 
@@ -644,8 +637,7 @@ public  class GameSketch extends PApplet {
         }
 
         public void  display(){
-            fill(255);
-            rect(x,y,width/2,40);
+            image(meta,x,y);
         }
 
         public void move(){
