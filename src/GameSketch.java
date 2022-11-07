@@ -10,7 +10,7 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =1; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
+    int GameState =0; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
     int cant = 10;
     int busPlayer = -1;
     int FinishTime;
@@ -33,7 +33,7 @@ public  class GameSketch extends PApplet {
     PImage bd,bi,alerta,meta;
     PImage skinp, skinm;
     PImage VelBon, PolCos, VelDb;
-    PImage unaVidas, dosVidas, tresVidas,creditos;
+    PImage unaVidas, dosVidas, tresVidas,creditos,marco;
     PImage chomdis,sombusa,puecto;
     calle c1;
     calle c2;
@@ -97,7 +97,7 @@ public  class GameSketch extends PApplet {
         float saverc1 = c1.v;
         int r = 80;
         while(r>0) {
-            c1.v= 20;
+            c1.v= 30;
             r = r-1;
             delay(19);
         }
@@ -107,7 +107,7 @@ public  class GameSketch extends PApplet {
         float saverc2 = c2.v;
         int r = 80;
         while(r>0) {
-            c2.v= 20;
+            c2.v= 30;
             r = r-1;
             delay(19);
         }
@@ -135,6 +135,7 @@ public  class GameSketch extends PApplet {
         VelDb = loadImage("images/ingame/obs/demandadian.png");
         creditos =loadImage("images/creditsmenu.jpg");
         meta = loadImage("images/ingame/background/meta.png");
+        marco = loadImage("images/ingame/background/marco.png");
         VelBon.resize(65,65);
         PolCos .resize(65,65);
         VelDb.resize(65,65);
@@ -163,11 +164,8 @@ public  class GameSketch extends PApplet {
         winmenu.play();
         losemenu = new Gif(this,"images/losemenu.gif");
         losemenu.play();
-
-        /*
         menuAni = new Gif(this, "images/menugif.gif");
         menuAni.play();
-        */
         menusel = loadImage("images/mensel.png");
         bSombusa = new Button(60,120,300,100,"SOMBUSA",1);
         bPuecto = new Button(60,240,300,100,"PUECTO LOCOMBIA",2);
@@ -184,16 +182,16 @@ public  class GameSketch extends PApplet {
         c2= new calle(width/2+20,-1500,20,bd);
         m1 = new goal(width/2+10,-30000,b1,c2);
         m2 = new goal(10,-30000,b2,c1);
-        a = new obstaculo(-2000,13,0,55,55,1,VelDb);
-        b = new obstaculo(-3000,13,1,55,55,1,VelDb);
-        c = new obstaculo(-2800,13,2,55,55,1,VelDb);
-        d = new obstaculo(-3700,13,3,55,55,1,VelDb);
-        e = new obstaculo(-2600,13,4,55,55,2,VelBon);
-        f= new obstaculo(-3600,13,5,55,55,2,VelBon);
-        g= new obstaculo(-2900,13,6,55,55,2,VelBon);
-        h= new obstaculo(-2800,13,7,55,55,2,VelBon);
-        i= new obstaculo(-2500,13,8,55,55,3,PolCos);
-        j = new obstaculo(-2400,13,9,55,55,3,PolCos);
+        a = new obstaculo(-2000,15,0,55,55,1,VelDb);
+        b = new obstaculo(-3000,15,1,55,55,1,VelDb);
+        c = new obstaculo(-2800,15,2,55,55,1,VelDb);
+        d = new obstaculo(-3700,15,3,55,55,1,VelDb);
+        e = new obstaculo(-2600,15,4,55,55,2,VelBon);
+        f= new obstaculo(-3600,15,5,55,55,2,VelBon);
+        g= new obstaculo(-2900,15,6,55,55,2,VelBon);
+        h= new obstaculo(-2800,15,7,55,55,2,VelBon);
+        i= new obstaculo(-2500,15,8,55,55,3,PolCos);
+        j = new obstaculo(-2400,15,9,55,55,3,PolCos);
     }
 
 
@@ -224,6 +222,10 @@ public  class GameSketch extends PApplet {
         if(GameState == 0 && keyCode==CONTROL){
             GameState = 5;
         }
+        if(GameState == 5 && keyCode==CONTROL){
+            GameState = 0;
+        }
+
         if((GameState==3 || GameState==4)&& keyCode==ENTER){
             GameState = 0;
         }
@@ -244,9 +246,6 @@ public  class GameSketch extends PApplet {
 
     //METODOS DE EJECUCION DEL JUEGO
     void game(){
-        System.out.println(b2.vidas);
-
-
         //Limpio colisiones de ambos buses
         b1.colObs = false;
         b1.colVel = false;
@@ -378,12 +377,12 @@ public  class GameSketch extends PApplet {
 
         if(b1.vidas==0){
             winner =2;
-            finishVidas();
+            GameState=3;
         }
 
         if(b2.vidas==0){
             winner =1;
-            finishVidas();
+            GameState=4;
         }
 
 
@@ -392,7 +391,7 @@ public  class GameSketch extends PApplet {
         b2.display();
         b2.move();
 
-
+        image(marco,0,0);
 
         if(b1.x<width/2+35){
             b1.x=width/2+35;
@@ -672,11 +671,12 @@ public  class GameSketch extends PApplet {
                 h.voy=0;
                 i.voy=0;
                 FinishTime=millis()/1000;
-                GameState =3;
                 if(bus.num==1){
                     System.out.println("Gano el bus 1");
+                    GameState=4;
                 }else {
                     System.out.println("Gano el bus 2");
+                    GameState=3;
                 }
                 w=0;
             }

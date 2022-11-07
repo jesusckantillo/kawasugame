@@ -10,7 +10,7 @@ public class Obstaculos {
         float num;
         for(int i=0;i<numobstaculos;i++){
              num = (float) (Math.random() * 600) + 1;
-            while(num<40 || num>560 ||(num>240 &num<320)){
+            while(num<40 || num>530 ||(num>240 &num<320)){
                 num = (float) (Math.random() * 600) + 1;
             }
             obs.add(num);
