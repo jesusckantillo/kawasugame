@@ -10,7 +10,7 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =0; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
+    int GameState =1; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
     int cant = 10;
     int busPlayer = -1;
     int FinishTime;
@@ -164,8 +164,11 @@ public  class GameSketch extends PApplet {
         winmenu.play();
         losemenu = new Gif(this,"images/losemenu.gif");
         losemenu.play();
+        /*
         menuAni = new Gif(this, "images/menugif.gif");
         menuAni.play();
+
+         */
         menusel = loadImage("images/mensel.png");
         bSombusa = new Button(60,120,300,100,"SOMBUSA",1);
         bPuecto = new Button(60,240,300,100,"PUECTO LOCOMBIA",2);
@@ -279,11 +282,11 @@ public  class GameSketch extends PApplet {
         b.choque(b2);
 
 
-       c.loop();
-       c.display();
-       c.move();
-       c.choque(b1);
-       c.choque(b2);
+        c.loop();
+        c.display();
+        c.move();
+        c.choque(b1);
+        c.choque(b2);
 
 
 
@@ -377,12 +380,12 @@ public  class GameSketch extends PApplet {
 
         if(b1.vidas==0){
             winner =2;
-            GameState=3;
+            finishVidas();
         }
 
         if(b2.vidas==0){
             winner =1;
-            GameState=4;
+            finishVidas();
         }
 
 
@@ -490,6 +493,7 @@ public  class GameSketch extends PApplet {
         float y;
         float v;
         PImage c;
+        //si
 
         calle(float tx, float ty, float tv, PImage C){
             x=tx;
