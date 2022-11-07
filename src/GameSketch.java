@@ -380,7 +380,8 @@ public  class GameSketch extends PApplet {
 
         if(b1.vidas==0){
             winner =2;
-            finishVidas();
+            FinishTime=millis()/1000;
+            GameState=3;
         }
 
         if(b2.vidas==0){
@@ -395,8 +396,8 @@ public  class GameSketch extends PApplet {
         b2.move();
 
 
-        if(b1.x<width/2+35){
-            b1.x=width/2+35;
+        if(b1.x-b1.ancho<=width/2+35){
+            b1.x=width/2+35+b1.ancho;
         }
         if(b1.x>width-50){
             b1.x=width-50;
@@ -435,7 +436,13 @@ public  class GameSketch extends PApplet {
         textFont(retrogaming);
         textAlign(CENTER);
         textSize(25);
-        text("Te embalaste por "+FinishTime+" Segundos",300,500);
+        if(b1.vidas==0){
+            text("el otro se dejó pillar del transito",300,470);
+            text("Te embalaste por "+FinishTime+" Segundos",300,500);
+        }else{
+            text("Te embalaste por "+FinishTime+" Segundos",300,500);
+        }
+
     }
     void losermenu(){
         background(losemenu);
@@ -708,7 +715,7 @@ public  class GameSketch extends PApplet {
         // reemplazar toda esta fucion
         Rectangle rec1 = new Rectangle((int)(o.ox-10),(int)(o.oy),(int)(o.anchoobs + 15 ),(int)(o.alturaobs+ 200));
         Rectangle rec2 = new Rectangle((int)(b.x-b.ancho),(int)(b.y-b.largo),(int)(b.ancho),(int)(b.largo));
-        if(rec1.intersects(rec2) && o.ox>=width/2-55){
+        if(rec1.intersects(rec2) && o.ox>=width/2+55){
             return true;
         }else{
             return false;
