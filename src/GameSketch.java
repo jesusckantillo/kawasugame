@@ -10,9 +10,10 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =0; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
+    int GameState =1; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
     int cant = 10;
     int busPlayer = -1;
+    int FinishTime;
     Button bSombusa,bChomdis,bPuecto;
     int dirB1=1;
     int dirB2=1;
@@ -113,6 +114,7 @@ public  class GameSketch extends PApplet {
         c2.v = saverc2;
     }
     public void finishVidas(){
+        FinishTime=millis()/1000;
         GameState=4;
     }
     @Override
@@ -136,9 +138,9 @@ public  class GameSketch extends PApplet {
         VelBon.resize(65,65);
         PolCos .resize(65,65);
         VelDb.resize(65,65);
-        chomdis.resize(60,90);
-        puecto.resize(60,90);
-        sombusa.resize(60,90);
+        chomdis.resize(40,80);
+        puecto.resize(40,80);
+        sombusa.resize(40,80);
         skinm = chomdis;
 
 
@@ -162,10 +164,10 @@ public  class GameSketch extends PApplet {
         losemenu = new Gif(this,"images/losemenu.gif");
         losemenu.play();
 
-
+        /*
         menuAni = new Gif(this, "images/menugif.gif");
         menuAni.play();
-
+        */
         menusel = loadImage("images/mensel.png");
         bSombusa = new Button(60,120,300,100,"SOMBUSA",1);
         bPuecto = new Button(60,240,300,100,"PUECTO LOCOMBIA",2);
@@ -429,9 +431,18 @@ public  class GameSketch extends PApplet {
     }
     void winnermenu(){
         background(winmenu);
+        textFont(retrogaming);
+        textAlign(CENTER);
+        textSize(25);
+        text("Te embalaste por "+FinishTime+" Segundos",300,500);
     }
     void losermenu(){
         background(losemenu);
+        textFont(retrogaming);
+        textAlign(CENTER);
+        textSize(25);
+        fill(203, 50, 52);
+        text("Te embalaste por "+FinishTime+" Segundos",300,500);
     }
     void selectmenu(){
         background(menusel);
@@ -660,6 +671,7 @@ public  class GameSketch extends PApplet {
                 g.voy=0;
                 h.voy=0;
                 i.voy=0;
+                FinishTime=millis()/1000;
                 GameState =3;
                 if(bus.num==1){
                     System.out.println("Gano el bus 1");
@@ -669,7 +681,6 @@ public  class GameSketch extends PApplet {
                 w=0;
             }
         }
-
     }
 
 
