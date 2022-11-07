@@ -10,7 +10,7 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =0; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU 4 LOSER MENU
+    int GameState =1; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
     int cant = 10;
     int busPlayer = -1;
     Button bSombusa,bChomdis,bPuecto;
@@ -29,7 +29,7 @@ public  class GameSketch extends PApplet {
     obstaculo a,b,c,d,e,f,g,h,i,j,k;
     bus b1;
     bus b2;
-    PImage bg,alerta;
+    PImage bd,bi,alerta;
     PImage skinp, skinm;
     PImage VelBon, PolCos, VelDb;
     PImage unaVidas, dosVidas, tresVidas,creditos;
@@ -149,9 +149,11 @@ public  class GameSketch extends PApplet {
             b1.vX=1;
         }
         b2= new bus(width/2-width/4,height,40,80,skinp,3,false,false,false,2,false);
-        bg= loadImage("images/ingame/background/carretera.png");
+        bi= loadImage("images/ingame/background/carretera.png");
+        bd= loadImage("images/ingame/background/carreteraD.png");
         alerta = loadImage("images/ingame/background/alerta.png");
-        bg.resize((int) (width/2+b1.ancho), height*5);
+        bi.resize((int) (350), height*5);
+        bd.resize((int) (300), height*5);
         retrogaming = createFont("fonts/retrogaming.ttf",20);
 
         winmenu = new Gif(this,"images/winmenu.gif");
@@ -159,9 +161,10 @@ public  class GameSketch extends PApplet {
         losemenu = new Gif(this,"images/losemenu.gif");
         losemenu.play();
 
-
+        /*
         menuAni = new Gif(this, "images/menugif.gif");
         menuAni.play();
+        */
         menusel = loadImage("images/mensel.png");
         bSombusa = new Button(60,120,300,100,"SOMBUSA",1);
         bPuecto = new Button(60,240,300,100,"PUECTO LOCOMBIA",2);
@@ -174,8 +177,8 @@ public  class GameSketch extends PApplet {
 
         imageMode(CORNER);
         rectMode(CORNER);
-        c1= new calle(-20,-1500,20,bg);
-        c2= new calle(width/2-20,-1500,20,bg);
+        c1= new calle(-20,-1500,20,bi);
+        c2= new calle(width/2+20,-1500,20,bd);
         m1 = new goal(width/2+10,-30000,b1,c2);
         m2 = new goal(10,-30000,b2,c1);
         a = new obstaculo(-2000,13,0,55,55,1,VelDb);
@@ -196,16 +199,16 @@ public  class GameSketch extends PApplet {
     public void keyPressed() {
 
         if (keyCode == LEFT && !IAinU) {
-            b1.vX = -5;
+            b1.vX = -5*dirB1;
         }
         if (keyCode == RIGHT && !IAinU) {
-            b1.vX = 5;
+            b1.vX = 5*dirB1;
         }
         if (key == 'a') {
-            b2.vX = -5;
+            b2.vX = -5*dirB2;
         }
         if (key == 'd') {
-            b2.vX = 5;
+            b2.vX = 5*dirB2;
         }
     }
 
@@ -251,13 +254,6 @@ public  class GameSketch extends PApplet {
         b1.colPol = false;
         b2.colPol = false;
 
-        //Buses
-
-
-
-
-
-        //Calles
         c1.move();
         c1.display();
         c1.loop();
@@ -353,10 +349,6 @@ public  class GameSketch extends PApplet {
             b1.vX=-b1.vX;
         }
 
-        if(b2.isSliding && Math.random()>0.5){
-            b2.vX=-b2.vX;
-        }
-
         if(b2.isSliding){
             drawAlerta();
         }
@@ -407,17 +399,17 @@ public  class GameSketch extends PApplet {
 
 
 
-        if(b1.x<width/2+b1.ancho){
-            b1.x=width/2+b1.ancho;
+        if(b1.x<width/2+35){
+            b1.x=width/2+35;
         }
-        if(b1.x>width){
-            b1.x=width;
+        if(b1.x>width-50){
+            b1.x=width-50;
         }
-        if(b2.x<b2.ancho){
-            b2.x=b2.ancho;
+        if(b2.x<b2.ancho+30){
+            b2.x=b2.ancho+30;
         }
-        if(b2.x>width/2-b2.ancho/2){
-            b2.x=width/2-b2.ancho/2;
+        if(b2.x>width/2-b2.ancho/2-30){
+            b2.x=width/2-b2.ancho/2-30;
         }
 
         if(b2.vidas==3){
@@ -513,8 +505,8 @@ public  class GameSketch extends PApplet {
 
         //Funcion que redibuja la imagen
         public void loop(){
-            if(y>=-10.0){
-                y=-1500;
+            if(y>=0.0){
+                y=-1200;
 
             }
         }
@@ -632,7 +624,7 @@ public  class GameSketch extends PApplet {
         }
         public void loop(){
             if(oy>700){
-                oy = h;
+                oy = -3700;
                 ArrayList <Float> obsta2 = o.generador();
                 ox = obsta2.get((int) (Math.random() * cant) + 1);
             }
@@ -693,7 +685,7 @@ public  class GameSketch extends PApplet {
     public void IAmove(bus bu){
         // reemplazar toda esta funcion
         boolean x = comp(bu,a) || comp(bu,b) || comp(bu,c) || comp(bu,d);
-        boolean y = bu.x >= width || bu.x - bu.ancho <= width/2;
+        boolean y = bu.x >= width-50 || bu.x - bu.ancho <= width/2+35;
         if(x && dodge ) {
             t=-t;
             dodge =false;
@@ -708,7 +700,7 @@ public  class GameSketch extends PApplet {
 
     public boolean comp(bus b,obstaculo o){
         // reemplazar toda esta fucion
-        Rectangle rec1 = new Rectangle((int)(o.ox-20),(int)(o.oy),(int)(o.anchoobs + 25 ),(int)(o.alturaobs+ 200));
+        Rectangle rec1 = new Rectangle((int)(o.ox-10),(int)(o.oy),(int)(o.anchoobs + 15 ),(int)(o.alturaobs+ 200));
         Rectangle rec2 = new Rectangle((int)(b.x-b.ancho),(int)(b.y-b.largo),(int)(b.ancho),(int)(b.largo));
         if(rec1.intersects(rec2) && o.ox>=width/2-55){
             return true;
