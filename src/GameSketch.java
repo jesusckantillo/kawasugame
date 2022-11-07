@@ -10,7 +10,7 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =1; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
+    int GameState =0; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU 4 LOSER MENU
     int cant = 10;
     int busPlayer = -1;
     Button bSombusa,bChomdis,bPuecto;
@@ -21,17 +21,18 @@ public  class GameSketch extends PApplet {
     boolean IAinU = true;
     int w=1;
     int t=1;
-    Gif menuAni;
-    Gif menuSelAni;
+    Gif menuAni,winmenu;
+    PImage menusel;
     PFont sfont;
     PFont Classroom;
     PFont retrogaming;
     obstaculo a,b,c,d,e,f,g,h,i,j,k;
     bus b1;
     bus b2;
-    PImage bg,puerto,loading;
+    PImage bg,alerta;
     PImage skinp, skinm;
     PImage VelBon, PolCos, VelDb;
+    PImage unaVidas, dosVidas, tresVidas;
     PImage chomdis,sombusa,puecto;
     calle c1;
     calle c2;
@@ -41,6 +42,16 @@ public  class GameSketch extends PApplet {
 
 
     //METODOS DE CARACTER GLOBAL
+
+
+
+    void drawAlerta(){
+        image(alerta,0,0);
+    }
+
+
+
+
     public void SlidingB1 (){
         int tsc1 = 100;
         while(tsc1>0) {
@@ -51,7 +62,6 @@ public  class GameSketch extends PApplet {
         dirB1=1;
         b1.isSliding=false;
     }
-
     public void SlidingB2 (){
         int tsc1 = 100;
         while(tsc1>0) {
@@ -62,15 +72,6 @@ public  class GameSketch extends PApplet {
         dirB2=1;
         b2.isSliding=false;
     }
-
-
-
-
-
-
-
-
-
     public void speedDownC1(){
         float saversd1 = c1.v;
         int tsc1 = 80;
@@ -111,9 +112,8 @@ public  class GameSketch extends PApplet {
         }
         c2.v = saverc2;
     }
-
     public void finishVidas(){
-        GameState=2;
+        GameState=3;
     }
     @Override
     public void settings() {
@@ -121,46 +121,48 @@ public  class GameSketch extends PApplet {
     }
     @Override
     public void setup() {
-        frameRate(60);
+        frameRate(45);
+        unaVidas = loadImage("images/ingame/background/1vida.png");
+        dosVidas = loadImage("images/ingame/background/2vidas.png");
+        tresVidas = loadImage("images/ingame/background/3vidas.png");
         chomdis = loadImage("images/ingame/buses/chomdis.png");
         puecto = loadImage("images/ingame/buses/puecto.png");
         sombusa = loadImage("images/ingame/buses/sombusa.png");
-        chomdis.resize(40,80);
-        puecto.resize(40,80);
-        sombusa.resize(40,80);
+        VelBon = loadImage("images/ingame/obs/aguila.png");
+        PolCos = loadImage("images/ingame/obs/policiaacostado.png");
+        VelDb = loadImage("images/ingame/obs/demandadian.png");
+        VelBon.resize(65,65);
+        PolCos .resize(65,65);
+        VelDb.resize(65,65);
+        chomdis.resize(60,90);
+        puecto.resize(60,90);
+        sombusa.resize(60,90);
         skinm = chomdis;
 
 
 
 
 
-        b1= new bus(width/4+width/2,height,40,80,skinm,6,false,false,false,1,false);
+        b1= new bus(width/4+width/2,height,40,80,skinm,3,false,false,false,1,false);
         if(IAinU){
             b1.vX=1;
         }
-        b2= new bus(width/2-width/4,height,40,80,skinp,6,false,false,false,2,false);
+        b2= new bus(width/2-width/4,height,40,80,skinp,3,false,false,false,2,false);
         bg= loadImage("images/ingame/background/carretera.png");
+        alerta = loadImage("images/ingame/background/alerta.png");
         bg.resize((int) (width/2+b1.ancho), height*5);
         retrogaming = createFont("fonts/retrogaming.ttf",20);
-        /*
+
+        winmenu = new Gif(this,"images/winmenu.gif");
+        winmenu.play();
+
+
         menuAni = new Gif(this, "images/menugif.gif");
         menuAni.play();
-        */
-        menuSelAni = new Gif(this,"images/mensel.gif");
-        menuSelAni.play();
-
-
-
-
-
+        menusel = loadImage("images/mensel.png");
         bSombusa = new Button(60,120,300,100,"SOMBUSA",1);
         bPuecto = new Button(60,240,300,100,"PUECTO LOCOMBIA",2);
         bChomdis = new Button(60,360,300,100,"CHOMDIS",3);
-
-
-
-
-
         retrogaming = createFont("fonts/retrogaming.ttf",20);
 
 
@@ -169,20 +171,20 @@ public  class GameSketch extends PApplet {
 
         imageMode(CORNER);
         rectMode(CORNER);
-        bg.resize((int) (width/2+b1.ancho), height*5);
-        c1= new calle(-20,-1500,17);
-        c2= new calle(width/2-20,-1500,17);
-        m1 = new goal(width/2+10,-10000,b1,c2);
-        m2 = new goal(10,-10000,b2,c1);
-        a = new obstaculo(-2000,15,0,55,55,1);
-        b = new obstaculo(-3000,15,1,55,55,1);
-        c = new obstaculo(-2800,15,2,55,55,1);
-        d = new obstaculo(-3700,15,3,55,55,1);
-        e = new obstaculo(-2600,15,4,55,55,2);
-        f= new obstaculo(-3600,15,5,55,55,2);
-        g= new obstaculo(-2900,15,6,55,55,2);
-        h= new obstaculo(-2800,15,7,55,55,2);
-        i= new obstaculo(-2500,15,8,55,55,3);
+        c1= new calle(-20,-1500,20,bg);
+        c2= new calle(width/2-20,-1500,20,bg);
+        m1 = new goal(width/2+10,-30000,b1,c2);
+        m2 = new goal(10,-30000,b2,c1);
+        a = new obstaculo(-2000,13,0,55,55,1,VelDb);
+        b = new obstaculo(-3000,13,1,55,55,1,VelDb);
+        c = new obstaculo(-2800,13,2,55,55,1,VelDb);
+        d = new obstaculo(-3700,13,3,55,55,1,VelDb);
+        e = new obstaculo(-2600,13,4,55,55,2,VelBon);
+        f= new obstaculo(-3600,13,5,55,55,2,VelBon);
+        g= new obstaculo(-2900,13,6,55,55,2,VelBon);
+        h= new obstaculo(-2800,13,7,55,55,2,VelBon);
+        i= new obstaculo(-2500,13,8,55,55,3,PolCos);
+        j = new obstaculo(-2400,13,9,55,55,3,PolCos);
     }
 
 
@@ -232,7 +234,9 @@ public  class GameSketch extends PApplet {
 
     //METODOS DE EJECUCION DEL JUEGO
     void game(){
-        background(0);
+        System.out.println(b2.vidas);
+
+
         //Limpio colisiones de ambos buses
         b1.colObs = false;
         b1.colVel = false;
@@ -243,75 +247,87 @@ public  class GameSketch extends PApplet {
         b1.colPol = false;
         b2.colPol = false;
 
+        //Buses
+
+
+
+
+
+        //Calles
         c1.move();
         c1.display();
         c1.loop();
-
-
         c2.display();
         c2.move();
         c2.loop();
 
+        /**
+        //Inicio obstaculos debuff de velocidad
+        a.loop();
+        a.display();
+        a.move();
+        a.choque(b1);
+        a.choque(b2);
 
 
         b.loop();
         b.display();
         b.move();
+        b.choque(b1);
+        b.choque(b2);
+
+
+       c.loop();
+       c.display();
+       c.move();
+       c.choque(b1);
+       c.choque(b2);
 
 
 
-        a.loop();
-        a.display();
-        a.move();
+        //Final de obstaculos de velocidad debuff
 
-
-
-        c.loop();
-        c.display();
-        c.move();
-
-
-
-        d.loop();
-        d.display();
-        d.move();
-
+        //Inicio de obstaculos de tipo aumento de velocidad
 
 
         e.loop();
         e.display();
         e.move();
-
+        e.choque(b1);
+        e.choque(b2);
 
         f.loop();
         f.display();
         f.move();
-
-        g.loop();
-        g.display();
-        g.move();
+        f.choque(b1);
+        f.choque(b2);
 
         h.loop();
         h.display();
         h.move();
-
-
-        a.choque(b1);
-        b.choque(b1);
-        c.choque(b1);
-        d.choque(b1);
-        e.choque(b1);
-        f.choque(b1);
-        g.choque(b1);
         h.choque(b1);
-        a.choque(b2);
-        b.choque(b2);
-        c.choque(b2);
-        d.choque(b2);
-        e.choque(b2);
-        f.choque(b2);
-        g.choque(b2);
         h.choque(b2);
+
+
+        //Fin de obstaculo de tipo aumento de velocidad
+
+        **/
+        //Inicio de obstaculos de tipo policia acotado
+        i.loop();
+        i.display();
+        i.move();
+        i.choque(b1);
+        i.choque(b2);
+
+        j.loop();
+        j.display();
+        j.move();
+        j.choque(b1);
+        j.choque(b2);
+
+
+
+
 
 
 
@@ -325,23 +341,23 @@ public  class GameSketch extends PApplet {
         m2.finish();
 
 
-        b1.display();
+
         if(IAinU) {
             IAmove(b1);
         }
         if(b1.isSliding && Math.random()>0.5){
             b1.vX=-b1.vX;
         }
-        b1.move();
-        b2.display();
-        b2.move();
+
+        if(b2.isSliding && Math.random()>0.5){
+            b2.vX=-b2.vX;
+        }
+
+        if(b2.isSliding){
+            drawAlerta();
+        }
 
 
-        i.loop();
-        i.display();
-        i.move();
-        i.choque(b1);
-        i.choque(b2);
 
 
 
@@ -380,8 +396,10 @@ public  class GameSketch extends PApplet {
         }
 
 
-
-
+        b1.display();
+        b1.move();
+        b2.display();
+        b2.move();
 
 
 
@@ -398,9 +416,22 @@ public  class GameSketch extends PApplet {
             b2.x=width/2-b2.ancho/2;
         }
 
+        if(b2.vidas==3){
+            image(tresVidas,0,0);
+        }else if(b2.vidas==2){
+            image(dosVidas,0,0);
+        }else if(b1.vidas==1){
+            image(unaVidas,0,0);
+        }
+
+
+
+
     }
     void mainmenu(){
-        background(menuAni);
+        textAlign(CENTER);
+        text("cargando",0,0);
+        image(menuAni,0,0);
         textFont(retrogaming);
         textAlign(LEFT,BOTTOM);
         text("CREDITOS: CONTROL",40,40);
@@ -408,10 +439,13 @@ public  class GameSketch extends PApplet {
 
     }
     void winnermenu(){
-        background(255);
+        background(winmenu);
+    }
+
+    void losermenu(){
     }
     void selectmenu(){
-        background(menuSelAni);
+        background(menusel);
         bSombusa.display();
         bSombusa.clicked(mouseX,mouseY);
         bChomdis.display();
@@ -430,7 +464,10 @@ public  class GameSketch extends PApplet {
             game();
         } else if(GameState==1){
             selectmenu();
+        }else if(GameState==3){
+            winnermenu();
         }
+
 
 
 
@@ -440,11 +477,13 @@ public  class GameSketch extends PApplet {
         float x;
         float y;
         float v;
+        PImage c;
 
-        calle(float tx, float ty, float tv){
+        calle(float tx, float ty, float tv, PImage C){
             x=tx;
             y=ty;
             v=tv;
+            c = C;
         }
 
         public void move() {
@@ -452,7 +491,7 @@ public  class GameSketch extends PApplet {
         }
 
         public void display(){
-            image(bg,x,y);
+            image(c,x,y);
         }
 
         //Funcion que redibuja la imagen
@@ -525,12 +564,13 @@ public  class GameSketch extends PApplet {
         float ox, oy;
         float voy;
         float h;
+        PImage skin;
 
         float alturaobs, anchoobs;
         ArrayList<Float> obsta = o.generador();
 
         //Constructor
-        obstaculo(float o_y, float Voy, int pos, int alto, int ancho, int TIPO) {
+        obstaculo(float o_y, float Voy, int pos, int alto, int ancho, int TIPO,PImage s) {
             tipo = TIPO;
             oy = o_y;
             h = oy; //Guardo su posicion inicla en y para que vuelva a ella al momento de llegar a y =0.0
@@ -538,6 +578,7 @@ public  class GameSketch extends PApplet {
             voy = Voy;
             alturaobs = alto;
             anchoobs = ancho;
+            skin = s;
         }
 
 
@@ -570,23 +611,11 @@ public  class GameSketch extends PApplet {
             oy = oy + voy;
         }
         public void display() {
-            if(this.tipo==1) {
-                fill(0, 255, 208);
-                rect(ox, oy, alturaobs, anchoobs);
-            }
-            if(this.tipo==2){
-                fill(90, 3, 252);
-                rect(ox, oy, alturaobs, anchoobs);
-            }
-            if(this.tipo==3){
-                fill(66, 245, 102);
-                rect(ox, oy, alturaobs, anchoobs);
-            }
-
+            image(skin,ox,oy);
         }
         public void loop(){
             if(oy>700){
-                oy = -3700;
+                oy = h;
                 ArrayList <Float> obsta2 = o.generador();
                 ox = obsta2.get((int) (Math.random() * cant) + 1);
             }
@@ -630,7 +659,7 @@ public  class GameSketch extends PApplet {
                 g.voy=0;
                 h.voy=0;
                 i.voy=0;
-                GameState =2;
+                GameState =3;
                 if(bus.num==1){
                     System.out.println("Gano el bus 1");
                 }else {
@@ -718,6 +747,7 @@ public  class GameSketch extends PApplet {
                 if( selected){
                     currentColor = color(232, 235, 68);
                     if(mousePressed){
+                        GameState =2;
                         if(this.nBoton==1){
                             b2.skin= sombusa;
                         }else if(this.nBoton==2){
@@ -725,7 +755,6 @@ public  class GameSketch extends PApplet {
                         } else if(this.nBoton==3) {
                             b2.skin= chomdis;
                         }
-                        GameState =2;
                     }
                 }
             }else{

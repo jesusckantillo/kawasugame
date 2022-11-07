@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="kawasugame:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/kawasugame_jar</output-path>
+    <root id="archive" name="kawasugame.jar">
+      <element id="module-output" name="kawasugame" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/core.jar" path-in-jar="/" />
+      <element id="dir-copy" path="$USER_HOME$/OneDrive - Universidad del Norte/SEGUNDO SEMESTRE/ALGORITMIA Y PROGRAMACION 2/KAWASU-RESOURCE/libraries/gifAnimation" />
+      <element id="extracted-dir" path="$USER_HOME$/OneDrive - Universidad del Norte/SEGUNDO SEMESTRE/ALGORITMIA Y PROGRAMACION 2/KAWASU-RESOURCE/libraries/gifAnimation/library/gifAnimation.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
