@@ -10,7 +10,7 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =0; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
+    int GameState =1; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
     int cant = 10;
     int busPlayer = -1;
     Button bSombusa,bChomdis,bPuecto;
@@ -142,8 +142,10 @@ public  class GameSketch extends PApplet {
         bg= loadImage("images/ingame/background/carretera.png");
         bg.resize((int) (width/2+b1.ancho), height*5);
         retrogaming = createFont("fonts/retrogaming.ttf",20);
+        /*
         menuAni = new Gif(this, "images/menugif.gif");
         menuAni.play();
+        */
         menuSelAni = new Gif(this,"images/mensel.gif");
         menuSelAni.play();
 
