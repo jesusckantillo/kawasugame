@@ -394,7 +394,6 @@ public  class GameSketch extends PApplet {
         b2.display();
         b2.move();
 
-        image(marco,0,0);
 
         if(b1.x<width/2+35){
             b1.x=width/2+35;
