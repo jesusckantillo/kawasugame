@@ -21,7 +21,7 @@ public  class GameSketch extends PApplet {
     boolean IAinU = true;
     int w=1;
     int t=1;
-    Gif menuAni,winmenu;
+    Gif menuAni,winmenu,losemenu;
     PImage menusel;
     PFont sfont;
     PFont Classroom;
@@ -32,7 +32,7 @@ public  class GameSketch extends PApplet {
     PImage bg,alerta;
     PImage skinp, skinm;
     PImage VelBon, PolCos, VelDb;
-    PImage unaVidas, dosVidas, tresVidas;
+    PImage unaVidas, dosVidas, tresVidas,creditos;
     PImage chomdis,sombusa,puecto;
     calle c1;
     calle c2;
@@ -113,7 +113,7 @@ public  class GameSketch extends PApplet {
         c2.v = saverc2;
     }
     public void finishVidas(){
-        GameState=3;
+        GameState=4;
     }
     @Override
     public void settings() {
@@ -131,6 +131,7 @@ public  class GameSketch extends PApplet {
         VelBon = loadImage("images/ingame/obs/aguila.png");
         PolCos = loadImage("images/ingame/obs/policiaacostado.png");
         VelDb = loadImage("images/ingame/obs/demandadian.png");
+        creditos =loadImage("images/creditsmenu.jpg");
         VelBon.resize(65,65);
         PolCos .resize(65,65);
         VelDb.resize(65,65);
@@ -155,6 +156,8 @@ public  class GameSketch extends PApplet {
 
         winmenu = new Gif(this,"images/winmenu.gif");
         winmenu.play();
+        losemenu = new Gif(this,"images/losemenu.gif");
+        losemenu.play();
 
 
         menuAni = new Gif(this, "images/menugif.gif");
@@ -213,9 +216,10 @@ public  class GameSketch extends PApplet {
             GameState = 1 ;
         }
         if(GameState == 0 && keyCode==CONTROL){
-            JOptionPane.showMessageDialog(null, "Menu de referencias: \n - Java Docs:  https://docs.oracle.com/en/java/ \n -Processing Docs: https://processing.org/reference \n - gifAnimation: https://github.com/akiljohnson1/GifAnimation \n " +
-                    "\n -Diseños by Andres Cantillo y Ronald Silva \n  @https://www.instagram.com/ronald_trash/ \n  @axpen_art'" +
-                    "axpen_art  \n Agradecimientos especiales al doctor Daladier Jabba Molinares", "Referencias",JOptionPane.PLAIN_MESSAGE,junioricon);
+            GameState = 5;
+        }
+        if((GameState==3 || GameState==4)&& keyCode==ENTER){
+            GameState = 0;
         }
 
         if (keyCode == LEFT) {
@@ -261,7 +265,7 @@ public  class GameSketch extends PApplet {
         c2.move();
         c2.loop();
 
-        /**
+
         //Inicio obstaculos debuff de velocidad
         a.loop();
         a.display();
@@ -276,7 +280,7 @@ public  class GameSketch extends PApplet {
         b.choque(b1);
         b.choque(b2);
 
-
+/**
        c.loop();
        c.display();
        c.move();
@@ -420,7 +424,7 @@ public  class GameSketch extends PApplet {
             image(tresVidas,0,0);
         }else if(b2.vidas==2){
             image(dosVidas,0,0);
-        }else if(b1.vidas==1){
+        }else if(b2.vidas==1){
             image(unaVidas,0,0);
         }
 
@@ -441,8 +445,8 @@ public  class GameSketch extends PApplet {
     void winnermenu(){
         background(winmenu);
     }
-
     void losermenu(){
+        background(losemenu);
     }
     void selectmenu(){
         background(menusel);
@@ -454,20 +458,33 @@ public  class GameSketch extends PApplet {
         bPuecto.clicked(mouseX,mouseY);
         delay(100);
     }
-
+    void creditos(){
+        background(creditos);
+    }
 
     @Override
     public void draw() {
-        if(GameState==0){
-            mainmenu();
-        } else if(GameState==2){
-            game();
-        } else if(GameState==1){
-            selectmenu();
-        }else if(GameState==3){
-            winnermenu();
-        }
 
+        switch (GameState){
+            case  0:
+                mainmenu();
+                break;
+            case 1:
+                selectmenu();
+                break;
+            case 2:
+                game();
+                break;
+            case 3:
+                winnermenu();
+                break;
+            case 4:
+                losermenu();
+                break;
+            case 5:
+                creditos();
+                break;
+        }
 
 
 
