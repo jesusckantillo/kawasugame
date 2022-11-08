@@ -10,9 +10,8 @@ public  class GameSketch extends PApplet {
 
 
     //VARIABLES DE CARACTER GLOBAl
-    int GameState =1; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
+    int GameState =0; //0 MAINMENU 1 SELECTBUSMENU 2 GAME 3 WINNER MENU
     int cant = 10;
-    int busPlayer = -1;
     int FinishTime;
     Button bSombusa,bChomdis,bPuecto;
     int dirB1=1;
@@ -31,14 +30,13 @@ public  class GameSketch extends PApplet {
     bus b1;
     bus b2;
     PImage bd,bi,alerta,meta;
-    PImage skinp, skinm;
+    PImage skinp, skinm,skinpUp,skinmUp;
     PImage VelBon, PolCos, VelDb;
     PImage unaVidas, dosVidas, tresVidas,creditos,marco;
-    PImage chomdis,sombusa,puecto;
+    PImage chomdis,sombusa,puecto,chomdisUp,sombusaUp,puectoUp;
     calle c1;
     calle c2;
     goal m1,m2;
-    ImageIcon junioricon = new ImageIcon("src\\data\\icons\\junior.png");
     Obstaculos o = new Obstaculos(cant);
 
 
@@ -54,7 +52,7 @@ public  class GameSketch extends PApplet {
 
 
     public void SlidingB1 (){
-        int tsc1 = 100;
+        int tsc1 = 160;
         while(tsc1>0) {
             dirB1=-1;
             tsc1 = tsc1-1;
@@ -64,7 +62,7 @@ public  class GameSketch extends PApplet {
         b1.isSliding=false;
     }
     public void SlidingB2 (){
-        int tsc1 = 100;
+        int tsc1 = 160;
         while(tsc1>0) {
             dirB2=-1;
             tsc1 = tsc1-1;
@@ -130,29 +128,39 @@ public  class GameSketch extends PApplet {
         chomdis = loadImage("images/ingame/buses/chomdis.png");
         puecto = loadImage("images/ingame/buses/puecto.png");
         sombusa = loadImage("images/ingame/buses/sombusa.png");
+        chomdisUp = loadImage("images/ingame/buses/chomdisup.png");
+        sombusaUp = loadImage("images/ingame/buses/sombusaup.png");
+        puectoUp = loadImage("images/ingame/buses/puectoup.png");
         VelBon = loadImage("images/ingame/obs/aguila.png");
         PolCos = loadImage("images/ingame/obs/policiaacostado.png");
         VelDb = loadImage("images/ingame/obs/demandadian.png");
-        creditos =loadImage("images/creditsmenu.jpg");
+        creditos =loadImage("images/creditos.png");
         meta = loadImage("images/ingame/background/meta.png");
         marco = loadImage("images/ingame/background/marco.png");
         VelBon.resize(65,65);
         PolCos .resize(65,65);
         VelDb.resize(65,65);
-        chomdis.resize(40,80);
-        puecto.resize(40,80);
-        sombusa.resize(40,80);
+        chomdis.resize(60,90);
+        puecto.resize(60,90);
+        sombusa.resize(60,90);
+        chomdisUp.resize(60,90);
+        puectoUp.resize(60,90);
+        sombusaUp.resize(60,90);
+
+
+
         skinm = chomdis;
+        skinmUp = chomdisUp;
 
 
 
 
 
-        b1= new bus(width/4+width/2,height,40,80,skinm,3,false,false,false,1,false);
+        b1= new bus(width/4+width/2,height,40,80,skinm,3,false,false,false,1,false,skinmUp);
         if(IAinU){
             b1.vX=1;
         }
-        b2= new bus(width/2-width/4,height,40,80,skinp,3,false,false,false,2,false);
+        b2= new bus(width/2-width/4,height,40,80,skinp,3,false,false,false,2,false,skinpUp);
         bi= loadImage("images/ingame/background/carretera.png");
         bd= loadImage("images/ingame/background/carreteraD.png");
         alerta = loadImage("images/ingame/background/alerta.png");
@@ -164,11 +172,8 @@ public  class GameSketch extends PApplet {
         winmenu.play();
         losemenu = new Gif(this,"images/losemenu.gif");
         losemenu.play();
-        /*
         menuAni = new Gif(this, "images/menugif.gif");
         menuAni.play();
-
-         */
         menusel = loadImage("images/mensel.png");
         bSombusa = new Button(60,120,300,100,"SOMBUSA",1);
         bPuecto = new Button(60,240,300,100,"PUECTO LOCOMBIA",2);
@@ -202,6 +207,11 @@ public  class GameSketch extends PApplet {
     @Override
     public void keyPressed() {
 
+        if (key == ESC) {
+            key = 0;  // Empêche d'utiliser la touche ESC
+        }
+
+
         if (keyCode == LEFT && !IAinU) {
             b1.vX = -5*dirB1;
         }
@@ -225,7 +235,8 @@ public  class GameSketch extends PApplet {
         if(GameState == 0 && keyCode==CONTROL){
             GameState = 5;
         }
-        if(GameState == 5 && keyCode==CONTROL){
+
+        if(GameState == 5 && keyCode==ESC){
             GameState = 0;
         }
 
@@ -442,6 +453,8 @@ public  class GameSketch extends PApplet {
         }else{
             text("Te embalaste por "+FinishTime+" Segundos",300,500);
         }
+        b2.vidas =3;
+        b1.vidas=3;
 
     }
     void losermenu(){
@@ -451,6 +464,8 @@ public  class GameSketch extends PApplet {
         textSize(25);
         fill(203, 50, 52);
         text("Te embalaste por "+FinishTime+" Segundos",300,500);
+        b2.vidas =3;
+        b1.vidas=3;
     }
     void selectmenu(){
         background(menusel);
@@ -532,7 +547,7 @@ public  class GameSketch extends PApplet {
         boolean colPol;
         boolean isSliding;
         int num;
-        PImage skin;
+        PImage skin,skinUp;
         int vidas;
         float x; //posicion en x
         float y; // posicion en y
@@ -552,7 +567,7 @@ public  class GameSketch extends PApplet {
         }
 
         //constructor
-        bus(float tx, float ty, float a, float l,PImage tipo, int Vidas, Boolean col, Boolean colv,Boolean colp, int Num,Boolean fly) {
+        bus(float tx, float ty, float a, float l,PImage tipo, int Vidas, Boolean col, Boolean colv,Boolean colp, int Num,Boolean fly,PImage tipoUp) {
             isSliding= false;
             num = Num;
             colPol = colp;
@@ -561,6 +576,7 @@ public  class GameSketch extends PApplet {
             vidas = Vidas;
             x = tx;
             skin = tipo;
+            skinUp = tipoUp;
             y = ty;
             ancho = a;
             largo = l;
@@ -577,8 +593,11 @@ public  class GameSketch extends PApplet {
 
         //mostrar-generar bus
         public void display() {
-            image(skin,x-ancho,y-largo);
-
+            if(this.isSliding){
+                image(skinUp,x - ancho,y - largo);
+            }else {
+                image(skin, x - ancho, y - largo);
+            }
         }
     }
     class obstaculo {
@@ -772,10 +791,13 @@ public  class GameSketch extends PApplet {
                         GameState =2;
                         if(this.nBoton==1){
                             b2.skin= sombusa;
+                            b2.skinUp =sombusaUp;
                         }else if(this.nBoton==2){
                             b2.skin= puecto;
+                            b2.skinUp = puectoUp;
                         } else if(this.nBoton==3) {
                             b2.skin= chomdis;
+                            b2.skinUp = chomdisUp;
                         }
                     }
                 }
